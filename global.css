@@ -1,0 +1,14 @@
+.form-logowanie
+{
+	position:absolute;
+	top:25vh;
+	background-color:#99ccff;
+	padding:10px;
+	border-radius:10px;
+}
+
+.login-button
+{
+	margin-left: auto;
+	margin-right:auto;
+}
