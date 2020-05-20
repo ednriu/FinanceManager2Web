@@ -22,12 +22,12 @@
 	border-radius:5px;
 }
 
-.form-group{
-	margin-bottom:20px;
-}
-
 .form-text{
 	text-align:center;
+}
+
+.form-group{
+	margin-bottom:20px;
 }
 
 .form-group input{
@@ -36,34 +36,50 @@
 
 .form-group::before{
 	position:absolute;
-	left:30px;
+	left:25px;
 	padding-top:37px;
 	font-size:18px;
 	font-family: "Font Awesome 5 Free";
 	font-weight: 400;
-	content: "\f007";
 	color:#778BF8;
 }
 
-.form-group:nth-of-type(2)::before{
+.logowanie .form-group:first-of-type::before{
 	content: "\f007";
 }
 
-.form-group:last-of-type::before{
+.logowanie .form-group:nth-of-type(2)::before{
+	content: "\f13e";
+}
+
+.logowanie .form-group:last-of-type::before{
 	content:"";
+}
+
+.rejestracja .form-group:first-of-type::before{
+	content: "\f007";
+}
+
+.rejestracja .form-group:nth-of-type(2)::before{
+	content: "\f13e";
+}
+
+.rejestracja .form-group:nth-of-type(3)::before{
+	content: "\f2bb";
+}
+
+.rejestracja .form-group:last-of-type::before{
+	content:"\f0e0";
 }
 
 .btn-block{
 	width:250px;
+	margin-left:auto;
+	margin-right:auto;
 }
 
 .start-buttons{
-	position:absolute;
-	margin-top:40vh;
-	width:300px;
-	height:80px;
-	text-align:center;
-	padding-top:20px;
+	margin-top:30vh;
 }
 
 

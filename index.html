@@ -16,7 +16,7 @@
 	<!-- FontAwesome CSS -->
 	<script src="https://kit.fontawesome.com/9427ffaa84.js" crossorigin="anonymous"></script>
 	<!-- Global CSS -->
-	<link rel="stylesheet" type="text/css" href="global.css">
+	<link rel="stylesheet" type="text/css" href="index_global.css">
 
 
   </head>
@@ -29,39 +29,39 @@
 					<button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#loginModal"><i class="fas fa-user"></i> Zaloguj</button>
 					<button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#registerModal"><i class="fas fa-caret-square-right"></i> Rejestracja</button>
 				</div>
+				
 				<!--Logowanie-->
 				<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				  <div class="modal-dialog  form-logowanie">
-					<div class="modal-content">
-					
+					<div class="modal-content">					
 						<div class="modal-header">
 							<h5 class="modal-title" id="exampleModalLabel">Logowanie użytkownika</h5>
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							  <span aria-hidden="true">&times;</span>
 							</button>
 						 </div>
-						<div class="modal-body">
+						<div class="modal-body logowanie">
 							<form>
 								<div class="text-center">
 									<img src="img/user_img/user_img.png" class="rounded user_img" alt="">
 								</div>
 								<div>
-								  <div class="form-group">
+								  <div class="form-group login-form">
 									<label for="login">Twój Login:</label>
 									<input type="text" class="form-control" id="login" placeholder="Twój Login">			
 								  </div>
-								  <div class="form-group">
+								  <div class="form-group login-form">
 									<label for="exampleInputPassword1">Hasło</label>
 									<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Twoje Hasło">
 									<small id="emailHelp" class="form-text text-muted">Rekomendujemy wpisywać hasło zasłonięte gwiazdkami.</small>
 								  </div>
-								  <div class="form-group form-check">
+								  <div class="form-group login-form form-check">
 									<input type="checkbox" class="form-check-input" id="showPassword">
 									<label class="form-check-label" for="showPassword">Pokaż Hasło</label>
 								  </div>
 								 </div>
-								  <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-sign-in-alt"></i> Submit</button>
-								  <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Close</button>
+								  <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-sign-in-alt"></i> Zaloguj</button>
+								  <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Anuluj</button>
 							</form>
 						</div>
 						
@@ -72,40 +72,50 @@
 						
 					</div>
 				  </div>
-				  
+					  
 
-				
+					
 				<!--Rejestracja-->
-				<div class="modal fade" id="RegisterModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-				  <div class="modal-dialog">
+				<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				  <div class="modal-dialog form-logowanie">
 					<div class="modal-content">
-						<form class="form-logowanie">
-							<div class="text-center">
-								<img src="img/user_img/user_img.png" class="rounded user_img" alt="">
-							</div>
-							<div>
-							  <div class="form-group">
-								<label for="reg_login">Twój Login:</label>
-								<input type="text" class="form-control" id="reg_login" placeholder="Twój Login">			
-							  </div>
-							  <div class="form-group">
-								<label for="reg_exampleInputPassword1">Hasło</label>
-								<input type="password" class="form-control" id="reg_exampleInputPassword1" placeholder="Twoje Hasło">
-								<small id="reg_emailHelp" class="form-text text-muted">Rekomendujemy wpisywać hasło zasłonięte gwiazdkami.</small>
-							  </div>
-							  <div class="form-group form-check">
-								<input type="checkbox" class="form-check-input" id="reg_showPassword">
-								<label class="form-check-label" for="reg_showPassword">Pokaż Hasło</label>
-							  </div>
-							 </div>
-							  <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-sign-in-alt"></i> Submit</button>
-						</form>
-					</div>
-				  </div>
+					
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLabel">Logowanie użytkownika</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							  <span aria-hidden="true">&times;</span>
+							</button>
+						 </div>
+						<div class="modal-body rejestracja">					
+							<form>
+								<div>
+								  <div class="form-group">
+									<label for="register_login">Login:</label>
+									<input type="text" class="form-control" id="register_login" placeholder="Twój Login">
+									<small id="register_loginHelp" class="form-text text-muted">Login powinien składać się conajmniej z 6 liter.</small>								
+								  </div>
+								  <div class="form-group">
+									<label for="reg_exampleInputPassword1">Hasło:</label>
+									<input type="password" class="form-control" id="reg_exampleInputPassword1" placeholder="Twoje Hasło">
+									<small id="register_passwordHelp" class="form-text text-muted text-justify">Hasło powinno składać się conajmniej z 6 znaków, powinno zawierać conajmniej jedną wielka literę oraz cyfrę.</small>
+								  </div>
+								 <div class="form-group">
+									<label for="register_name">Imię:</label>
+									<input type="text" class="form-control" id="register_name" placeholder="Twoje Imię">					
+								  </div>
+								  <div class="form-group">
+									<label for="register_email">Email:</label>
+									<input type="text" class="form-control" id="register_email" placeholder="Adres poczty elektronicznej">					
+								  </div>
+								 </div>
+								  <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-sign-in-alt"></i> Zarejestruj</button>
+								  <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Anuluj</button>
+							</form>
+						</div>
+						</div>			
+					</div>		
 				</div>
-			
-			
-			</div>
+		</div>
 	</div>
 </div>
 
