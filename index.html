@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">	
+	<meta name="description" content="Aplikacja do zarządzania finansami">
+	<meta name="keywords" content="pieniądze, gospodarność, oszczędności">
+	<meta name="author" content="Andrzej Konicki">		
+	<meta http-equiv="X-Ua-Compatible" content="IE=edge">
+	<title>Panel Logowania</title>
+	
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="bootstrap-4.0.0-dist/css/bootstrap.min.css">
+	<!-- FontAwesome CSS -->
+	<script src="https://kit.fontawesome.com/9427ffaa84.js" crossorigin="anonymous"></script>
+	<!-- Global CSS -->
+	<link rel="stylesheet" type="text/css" href="global.css">
+
+
+  </head>
+<body>
+<div class="container-fluid bg">
+	<div class="row d-flex justify-content-center">
+
+			<div class="col-md-3 col-sm-6 col-xs-12">
+				<div class="start-buttons">
+					<button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#loginModal"><i class="fas fa-user"></i> Zaloguj</button>
+					<button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#registerModal"><i class="fas fa-caret-square-right"></i> Rejestracja</button>
+				</div>
+				<!--Logowanie-->
+				<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				  <div class="modal-dialog  form-logowanie">
+					<div class="modal-content">
+					
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalLabel">Logowanie użytkownika</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							  <span aria-hidden="true">&times;</span>
+							</button>
+						 </div>
+						<div class="modal-body">
+							<form>
+								<div class="text-center">
+									<img src="img/user_img/user_img.png" class="rounded user_img" alt="">
+								</div>
+								<div>
+								  <div class="form-group">
+									<label for="login">Twój Login:</label>
+									<input type="text" class="form-control" id="login" placeholder="Twój Login">			
+								  </div>
+								  <div class="form-group">
+									<label for="exampleInputPassword1">Hasło</label>
+									<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Twoje Hasło">
+									<small id="emailHelp" class="form-text text-muted">Rekomendujemy wpisywać hasło zasłonięte gwiazdkami.</small>
+								  </div>
+								  <div class="form-group form-check">
+									<input type="checkbox" class="form-check-input" id="showPassword">
+									<label class="form-check-label" for="showPassword">Pokaż Hasło</label>
+								  </div>
+								 </div>
+								  <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-sign-in-alt"></i> Submit</button>
+								  <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Close</button>
+							</form>
+						</div>
+						
+						<div class="modal-footer">
+							<small id="logingHelp" class="form-text text-muted">Problemy z logowaniem?</small>
+						  </div>
+						</div>
+						
+					</div>
+				  </div>
+				  
+
+				
+				<!--Rejestracja-->
+				<div class="modal fade" id="RegisterModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				  <div class="modal-dialog">
+					<div class="modal-content">
+						<form class="form-logowanie">
+							<div class="text-center">
+								<img src="img/user_img/user_img.png" class="rounded user_img" alt="">
+							</div>
+							<div>
+							  <div class="form-group">
+								<label for="reg_login">Twój Login:</label>
+								<input type="text" class="form-control" id="reg_login" placeholder="Twój Login">			
+							  </div>
+							  <div class="form-group">
+								<label for="reg_exampleInputPassword1">Hasło</label>
+								<input type="password" class="form-control" id="reg_exampleInputPassword1" placeholder="Twoje Hasło">
+								<small id="reg_emailHelp" class="form-text text-muted">Rekomendujemy wpisywać hasło zasłonięte gwiazdkami.</small>
+							  </div>
+							  <div class="form-group form-check">
+								<input type="checkbox" class="form-check-input" id="reg_showPassword">
+								<label class="form-check-label" for="reg_showPassword">Pokaż Hasło</label>
+							  </div>
+							 </div>
+							  <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-sign-in-alt"></i> Submit</button>
+						</form>
+					</div>
+				  </div>
+				</div>
+			
+			
+			</div>
+	</div>
+</div>
+
+
+
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>
