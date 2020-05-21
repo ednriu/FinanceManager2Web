@@ -1,0 +1,19 @@
+.bg{
+	background: url('img/pexels-photo-534229.jpeg') no-repeat;
+	width: 100%;
+	height: 100vh;
+	background-size:100%;
+}
+
+.menu-button{
+	width:150px;
+	text-align:center;
+	background-color:red;
+}
+
+@media only screen and (max-width: 678px){
+	.bg{
+		background-size: 300%;
+	}	
+}
+
