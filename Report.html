@@ -8,54 +8,37 @@
     <meta name="generator" content="Jekyll v4.0.1">
     <title>Moje Finanse</title>
 
-    <!-- <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/starter-template/"> -->
-
     <!-- Bootstrap core CSS -->
-<link href="bootstrap-4.0.0-dist/css/bootstrap.css" rel="stylesheet">
-
-    <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-      }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-    </style>
-    <!-- Custom styles for this template -->
-    <link href="starter-template.css" rel="stylesheet">
+	<link href="bootstrap-4.0.0-dist/css/bootstrap.css" rel="stylesheet">
+	<link href="report_global.css" rel="stylesheet">
+	<link href="bootstrap-4.0.0-dist/css/dashboard.css" rel="stylesheet">
   </head>
   
   
 <body>
-<div class="container-fluid bg">
 <!-- top nawigation bar-->
-    <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
-  <a class="navbar-brand" href="#">Andrzej</a>
+<nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">  
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    Zakres Danych
+  </button>  
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
-  </button>
-
+  </button>  
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
         <a class="nav-link" href="#pierwszy">Moje Finanse<span class="sr-only">(current)</span></a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#drugi">Ustawienia Aplikacji</a>
-      </li>
-	  <li class="nav-item">
-        <a class="nav-link" href="#trzeci">Ustawienia Użytkownika</a>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Aplikacja</a>
+        <div class="dropdown-menu" aria-labelledby="dropdown01">
+          <a class="dropdown-item" href="#">Kategorie</a>
+          <a class="dropdown-item" href="#">Korekta</a>
+          <a class="dropdown-item" href="#">Zmiana Danych</a>
+        </div>
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Ustawienia Użytkownika</a>
+        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Użytkownik</a>
         <div class="dropdown-menu" aria-labelledby="dropdown01">
           <a class="dropdown-item" href="#">Zmiana Hasła</a>
           <a class="dropdown-item" href="#">Zmiana Adresu</a>
@@ -72,111 +55,144 @@
 <!-- END top nawigation bar-->
 <!-- Finance Manager Content-->
 
+<div class="container-fluid bg">
+	<div class="row position-relative">
 
-<div class="row">
-<!--side Bar Menu-->
-    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-      <div class="sidebar-sticky pt-3">
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <a class="nav-link active" href="#">
-              <span data-feather="home"></span>
-              Dodaj Wydatek <span class="sr-only">(current)</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file"></span>
-              Dodaj Przychód
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="shopping-cart"></span>
-              Bieżący Miesiąc
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="users"></span>
-              Poprzedni Miesiąc
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="bar-chart-2"></span>
-              Dowolny okres
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="layers"></span>
-              inne
-            </a>
-          </li>
-        </ul>       
-      </div>
-    </nav>
-	
-	
-<!--Right Panel-->
-    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Dashboard</h1>
-        <div class="btn-toolbar mb-2 mb-md-0">
-          <div class="btn-group mr-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-          </div>
-          <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-            <span data-feather="calendar"></span>
-            This week
-          </button>
-        </div>
-      </div>
-
-      <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>
-
-      <h2>Wydatki</h2>
-      <div class="table-responsive">
-        <table class="table table-striped table-sm">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Data</th>
-              <th>Kwota [zł]</th>
-              <th>Kategoria</th>
-              <th>Komentarz</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>22.05.2020</td>
-              <td>15</td>
-              <td>jedzenie</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td>22.05.2020</td>
-              <td>16</td>
-              <td>jedzenie</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td>22.05.2020</td>
-              <td>17</td>
-              <td>auto</td>
-              <td>wymiana oleju</td>
-            </tr>
-            
-          </tbody>
-        </table>
-      </div>
-    </main>
-  </div>
+	<!--side Bar Menu-->
+		<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+		  <div class="sidebar-sticky pt-lg-3 pt-md-5">		  
+			<ul class="nav flex-column">			
+			  <li class="nav-item">
+				<a class="nav-link active" href="#">
+				  <span data-feather="credit-card"></span>
+				  Dodaj Wydatek <span class="sr-only">(current)</span>
+				</a>
+			  </li>
+			  <li class="nav-item">
+				<a class="nav-link" href="#">
+				  <span data-feather="dollar-sign"></span>
+				  Dodaj Przychód
+				</a>
+			  </li>
+			  <li class="nav-item">
+				<a class="nav-link" href="#">
+				  <span data-feather="edit-2"></span>
+				  Bieżący Miesiąc
+				</a>
+			  </li>
+			  <li class="nav-item">
+				<a class="nav-link" href="#">
+				  <span data-feather="edit-3"></span>
+				  Poprzedni Miesiąc
+				</a>
+			  </li>
+			  <li class="nav-item">
+				<a class="nav-link" href="#">
+				  <span data-feather="filter"></span>
+				  Dowolny okres
+				</a>
+			  </li>
+			  <li class="nav-item">
+				<a class="nav-link" href="#">
+				  <span data-feather="activity"></span>
+				  inne
+				</a>
+			  </li>
+			</ul>       
+		  </div>
+		</nav>
+		
+		
+	<!--Right Panel-->
+		<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4 pt-lg-3 pt-md-5">
+		<div class="row">
+			<div class="col-lg-6">
+				<h2>Wydatki</h2>
+				  <div class="table-responsive">
+					<table class="table table-striped table-sm">
+					  <thead>
+						<tr>
+						  <th>#</th>
+						  <th>Data</th>
+						  <th>Kwota [zł]</th>
+						  <th>Kategoria</th>
+						  <th>Komentarz</th>
+						</tr>
+					  </thead>
+					  <tbody>
+						<tr>
+						  <td>1</td>
+						  <td>22.05.2020</td>
+						  <td>15</td>
+						  <td>jedzenie</td>
+						  <td></td>
+						</tr>
+						<tr>
+						  <td>1</td>
+						  <td>22.05.2020</td>
+						  <td>16</td>
+						  <td>jedzenie</td>
+						  <td></td>
+						</tr>
+						<tr>
+						  <td>1</td>
+						  <td>22.05.2020</td>
+						  <td>17</td>
+						  <td>auto</td>
+						  <td>wymiana oleju</td>
+						</tr>						
+					  </tbody>
+					</table>
+				  </div>
+			</div>
+			<div class="col-lg-6"> 
+			<h2>Wpływy</h2>
+				  <div class="table-responsive">
+					<table class="table table-striped table-sm">
+					  <thead>
+						<tr>
+						  <th>#</th>
+						  <th>Data</th>
+						  <th>Kwota [zł]</th>
+						  <th>Kategoria</th>
+						  <th>Komentarz</th>
+						</tr>
+					  </thead>
+					  <tbody>
+						<tr>
+						  <td>1</td>
+						  <td>22.05.2020</td>
+						  <td>15</td>
+						  <td>odsetki</td>
+						  <td></td>
+						</tr>
+						<tr>
+						  <td>1</td>
+						  <td>22.05.2020</td>
+						  <td>16</td>
+						  <td>praca</td>
+						  <td></td>
+						</tr>
+						<tr>
+						  <td>1</td>
+						  <td>22.05.2020</td>
+						  <td>17</td>
+						  <td>programowanie</td>
+						  <td>wymiana oleju</td>
+						</tr>						
+					  </tbody>
+					</table>
+				  </div>
+			</div>
+		</div>
+		
+		<div class="row">
+			<h2> tutaj będzie wykres </h2>
+		</div>
+		
+		  
+		</main>
+	</div>
 </div><!-- /.container -->
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="bootstrap-4.0.0-dist/js/bootstrap.bundle.js"></script>
