@@ -15,6 +15,8 @@
 	<link href="bootstrap-4.0.0-dist/css/bootstrap.css" rel="stylesheet">
 	<link href="report_global.css" rel="stylesheet">
 	<link href="bootstrap-4.0.0-dist/css/dashboard.css" rel="stylesheet">
+	
+	<script type="text/javascript" src="scr_wydatki_przychody.js"></script>
   </head>
   
   
@@ -70,13 +72,13 @@
 		  <div class="sidebar-sticky pt-lg-3 pt-md-5">		  
 			<ul class="nav flex-column pt-2">			
 			  <li class="nav-item">
-				<a class="nav-link" href="#">
+				<a class="nav-link" href="#" data-toggle="modal" data-target="#modalExpense">
 				  <span data-feather="credit-card"></span>
 				  Dodaj Wydatek <span class="sr-only">(current)</span>
 				</a>
 			  </li>
 			  <li class="nav-item">
-				<a class="nav-link active" href="#">
+				<a class="nav-link" href="#" data-toggle="modal" data-target="#modalIncome">
 				  <span data-feather="dollar-sign"></span>
 				  Dodaj Przychód
 				</a>
@@ -93,7 +95,7 @@
 				  Poprzedni Miesiąc
 				</a>
 			  </li>
-			  <li class="nav-item">
+			  <li class="nav-item" href="#" data-toggle="modal" data-target="#modalAnotherRangeOfDate"">
 				<a class="nav-link" href="#">
 				  <span data-feather="filter"></span>
 				  Dowolny okres
@@ -227,8 +229,160 @@
 						<canvas id="pieChart_wydatki"></canvas>	
 					</div>
 
-			</div>		
-		  
+			</div>
+
+
+			<!-- Modal Add INCOME -->
+			<div class="modal fade  bd-example-modal-sm" id="modalIncome" tabindex="-1" role="dialog" aria-labelledby="modalIncome" aria-hidden="true">
+			  <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<h5 class="modal-title" id="modalIncomeTitle">Dodaj Przychód</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					  <span aria-hidden="true">&times;</span>
+					</button>
+				  </div>
+				  <div class="modal-body">
+					<form>
+					  <div class="form-group">
+							<label for="kwotaInput">Kwota:</label>
+							<input type="number" min="0" step="0.01" data-number-to-fixed="2" data-number-stepfactor="100" class="form-control currency" id="incomeAmmount" />
+					  </div>
+					  <div class="form-group">
+						<label for="datePicker">Data:</label>
+						<input type="date" class="form-control" id="datePicker" placeholder="dd-mm-yyyy">
+						<script>TodayDate();</script>
+					  </div>
+					  <div class="form-group">
+						<label for="kategoriaInput">Kategoria:</label>
+						<select multiple class="form-control" id="kategoriaInput">
+						  <option>Wynagrodzenie za Pracę</option>
+						  <option>Odsetki</option>
+						  <option>Allegro</option>
+						  <option>Inne</option>
+						</select>
+					  </div>
+					  <div class="form-group">
+						<label for="komentarzInput">Komentarz:</label>
+						<textarea class="form-control" id="komentarzInput" rows="3"></textarea>
+					  </div>
+					</form>
+				  </div>
+				  <div class="modal-footer d-flex justify-content-center">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+					<button type="button" class="btn btn-primary">Dodaj</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
+			
+			<!-- Modal Add EXPENSE -->
+			<div class="modal fade  bd-example-modal-sm" id="modalExpense" tabindex="-1" role="dialog" aria-labelledby="modalExpense" aria-hidden="true">
+			  <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<h5 class="modal-title" id="modalIncomeTitle">Dodaj Wydatek</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					  <span aria-hidden="true">&times;</span>
+					</button>
+				  </div>
+				  <div class="modal-body">
+					<form>
+					  <div class="form-group">
+						<label for="kwotaInput">Kwota:</label>
+						<input type="number" min="0" step="0.01" data-number-to-fixed="2" data-number-stepfactor="100" class="form-control currency" id="expenceAmmount" />
+					  </div>
+					  <div class="form-group">
+						<label for="datePicker">Data:</label>
+						<input type="date" class="form-control" id="datePicker" placeholder="dd-mm-yyyy">
+						<script>TodayDate();</script>
+					  </div>
+					  <div class="form-group">
+							 <label for="radios">Forma płatności:</label>
+									<div class="form-check">
+									  <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="optionGotowka" checked>
+									  <label class="form-check-label" for="gridRadios1">
+										Gotówka
+									  </label>
+									</div>
+									<div class="form-check">
+									  <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="optionKartaPlatnicza">
+									  <label class="form-check-label" for="gridRadios2">
+										Karta Płatnicza
+									  </label>
+									</div>
+									<div class="form-check">
+									  <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="OptionKartaDebetowa">
+									  <label class="form-check-label" for="gridRadios3">
+										Karta Debetowa
+									  </label>
+									</div>
+
+					  </div>
+					  <div class="form-group">
+						<label for="kategoriaInput">Kategoria:</label>
+						<select multiple class="form-control" id="kategoriaInput">
+						  <option>Jedzenie</option>
+						  <option>Mieszkanie</option>
+						  <option>Transport</option>
+						  <option>Telekomunikacja</option>
+						  <option>Opieka Zdrowotna</option>
+						  <option>Higiena</option>
+						  <option>Wycieczka</option>
+						  <option>Szkolenia</option>
+						  <option>Książki</option>
+						  <option>Oszczędności</option>
+						  <option>Emerytura</option>
+						  <option>Spłata Długów</option>
+						  <option>Darowizna</option>
+						  <option>Inne</option>
+						</select>
+					  </div>
+					  <div class="form-group">
+						<label for="komentarzInput">Komentarz:</label>
+						<textarea class="form-control" id="komentarzInput" rows="3"></textarea>
+					  </div>
+					</form>
+				  </div>
+				  <div class="modal-footer d-flex justify-content-center">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+					<button type="button" class="btn btn-primary">Dodaj</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
+			
+			<!--MODAL Another Range of Date -->
+			<div class="modal fade  modalAnotherRangeOfDate" id="modalAnotherRangeOfDate" tabindex="-1" role="dialog" aria-labelledby="modalAnotherRangeOfDate" aria-hidden="true">
+			  <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<h5 class="modal-title" id="modalIncomeTitle">Wybierz Zakres Dat</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					  <span aria-hidden="true">&times;</span>
+					</button>
+				  </div>
+				  <div class="modal-body">
+					<form>					 
+					  <div class="form-group">
+						<label for="datePicker">Data początkowa:</label>
+						<input type="date" class="form-control" id="dateStart" placeholder="dd-mm-yyyy">
+					  </div>
+					  <div class="form-group">
+						<label for="datePicker">Data końcowa:</label>
+						<input type="date" class="form-control" id="dateEnd" placeholder="dd-mm-yyyy">
+					  </div>
+					  
+					</form>
+				  </div>
+				  <div class="modal-footer d-flex justify-content-center">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+					<button type="button" class="btn btn-primary">Dodaj</button>
+				  </div>
+				</div>
+			  </div>
+			</div>	
+			
 		</main>
 	</div>
 </div><!-- /.container -->
@@ -243,6 +397,7 @@
     <script src="bootstrap-4.0.0-dist/js/dashboard.js"></script>
 	<script src="bootstrap-4.0.0-dist/js/pieChart_wydatki.js"></script>
 	<script src="bootstrap-4.0.0-dist/js/pieChart_wplywy.js"></script>
+
 
 </body>
 </html>

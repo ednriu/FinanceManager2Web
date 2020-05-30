@@ -166,12 +166,47 @@ table.table-bordered > tbody > tr > td{
 	height:2.5rem;
 }
 
+/*
+ * Modals for Adding Expences and Incomes
+ */
+
+.modal{
+	color: #0521B3;
+}
+
+.modal-header, .modal-footer{
+	background-color:#E3E0B8;
+}
+
+.modal-body{
+	padding: 0.5rem 1.5rem;
+}
+
+h5.modal-title{
+	font-size:1.8rem;
+}
+
+.modalAnotherRangeOfDate h5.modal-title{
+	font-size:1.4rem;
+}
+
+.modal label{
+	font-size:1.4rem;
+}
+
+label.form-check-label{
+	font-size:1rem;
+}
+
+input[type:number]{
+	background-color:red;
+}
 
 @media only screen and (max-width: 767.98px){
 	.bg{
 		background-size: 300%;
 	}
 	body{
-		padding-top:3rem;
+		padding-top:3rem;		
 	}
 }
