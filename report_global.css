@@ -9,7 +9,7 @@ body {
 .bg{
 	background: url('img/pexels-photo-259132.jpeg') no-repeat;
 	max-width: 100%;
-	height: auto;	
+	min-height: 100vh;	
 	background-attachment: fixed;  
 	background-size: cover;
 }
@@ -72,7 +72,6 @@ table.table-bordered > tbody > tr > td{
 }
 
 
-
 .sidebar-sticky {
   position: relative;
   top: 0;
@@ -88,25 +87,32 @@ table.table-bordered > tbody > tr > td{
     position: sticky;
   }
 }
-.sidebar-sticky{
+
+.user-menu, .sidebar-sticky{
 	
 	background-color:#7dbbf5;
 }
 
-.sidebar .nav-link {
+.nav .nav-link, .sidebar .nav-link {
   font-weight: 500;
   color: #411161;
 }
 
-.sidebar .nav-link .feather {
-  margin-right: 4px;
-  color: #064210;
+.nav .nav-link .feather, .sidebar .nav-link .feather {
+  margin-right: 8px;
+  color:#606A7B;
+  position:relative;
+  top:5px;
 }
 
-.sidebar .nav-link.active {
+.nav .nav-link.active, .sidebar .nav-link.active {
   color: #0521B3;
+  background-color:#6caae4;
+  border:none;
 }
 
+.nav .nav-link:hover .feather,
+.nav .nav-link.active .feather,
 .sidebar .nav-link:hover .feather,
 .sidebar .nav-link.active .feather {
   color: inherit;
@@ -114,7 +120,7 @@ table.table-bordered > tbody > tr > td{
 
 .sidebar-heading {
   font-size: .75rem;
-  text-transform: uppercase;
+  text-transform: uppercase;  
 }
 
 /*
@@ -174,8 +180,13 @@ table.table-bordered > tbody > tr > td{
 	color: #0521B3;
 }
 
-.modal-header, .modal-footer{
-	background-color:#E3E0B8;
+.modal-header{
+	background-color:#0b1570;
+	color:white;
+}
+
+.modal-footer{
+	background-color: #EEEDE0;
 }
 
 .modal-body{
@@ -201,6 +212,41 @@ label.form-check-label{
 input[type:number]{
 	background-color:red;
 }
+
+/*
+ * User Settings Cards
+ */
+ 
+ .card-header{
+	background-color:#0b1570;
+	color:white;
+	font:1rem;
+ }
+ 
+ .card-body{
+	background-color:#e4e4eb;
+	color:#36364d;
+	font-size:1rem;
+ }
+ 
+ .card{
+	 border:1px solid #0b1570;
+	 	opacity:0.9;
+ }
+ .user-menu.card{
+	 opacity:1;
+ }
+ 
+.card label{
+	 font-size:20px;
+ }
+ 
+ .card input:disabled{
+	background-color:white;
+ }
+ 
+
+
 
 @media only screen and (max-width: 767.98px){
 	.bg{

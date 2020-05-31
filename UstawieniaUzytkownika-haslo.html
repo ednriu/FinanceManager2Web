@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Jekyll v4.0.1">
+    <title>Ustawienia Użytkownika</title>
+
+	<!-- FontAwesome CSS -->
+	<script src="https://kit.fontawesome.com/9427ffaa84.js" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap core CSS -->
+	<link href="bootstrap-4.0.0-dist/css/bootstrap.css" rel="stylesheet">
+	<link href="report_global.css" rel="stylesheet">
+	<link href="bootstrap-4.0.0-dist/css/dashboard.css" rel="stylesheet">	
+
+  </head>
+  
+  
+  
+  
+<body>
+<!-- top nawigation bar-->
+<nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top top-navbar">  
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  
+  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    <ul class="navbar-nav mr-auto">
+     <li class="nav-item">
+        <a class="nav-link" href="Report.html"><span class="navbar-text">Moje Finanse</span><span class="sr-only"></span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="UstawieniaAplikacji.html"><span class="navbar-text">Aplikacja</span><span class="sr-only"></span></a>
+      </li>
+      <li class="nav-item active">
+       <a class="nav-link" href="UstawieniaUzytkownika.html"><span class="navbar-text">Użytkownik</span><span class="sr-only">(current)</span></a>
+      </li>
+	  <li class="nav-item">
+        <a class="nav-link" href="index.html"><span class="navbar-text">Wyloguj</span><span class="sr-only"></span></a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2 search-input" type="text" placeholder="Search" aria-label="Search">
+      <button class="btn btn-secondary my-2 my-sm-0 search-btn" type="submit">Search</button>
+    </form>
+  </div>
+</nav>
+<!-- END top nawigation bar-->
+<!-- Finance Manager Content-->
+
+<div class="container-fluid bg">
+	<div class="row position-relative d-flex justify-content-center">
+
+                  <!-- grid column -->
+                  <div class="col-lg-2 pt-4">
+                    <!-- .card -->
+                    <div class="card card-fluid user-menu">
+                      <h6 class="card-header"> Twoje Dane </h6>
+                      <!-- .nav -->
+                      <nav class="nav nav-tabs flex-column">
+                        <a href="UstawieniaUzytkownika-dane.html" class="nav-link"><span data-feather="clipboard"></span>Dane Profilowe</a>
+                        <a href="UstawieniaUzytkownika-haslo.html" class="nav-link active"><span data-feather="lock"></span>Zmiana Hasła</a>
+						<a href="UstawieniaUzytkownika-email.html" class="nav-link"><span data-feather="mail"></span>Zmiana Adresu Email</a>
+                      </nav>
+                      <!-- /.nav -->
+                    </div>
+                    <!-- /.card -->
+                  </div>
+                  <!-- /grid column -->
+				  
+                  <!-- grid column -->
+                 <div class="col-lg-3 pt-4">
+                    <!-- .card -->
+                    <div class="card card-fluid">
+                      <h6 class="card-header"> Zmiana Hasła </h6>
+                      <!-- .card-body -->
+                      <div class="card-body">
+					  <form>
+
+                          <div class="form-group">
+                            <label for="input04">Nowe Hasło</label>
+                            <input type="password" class="form-control" id="input04" value="secret" required=""> </div>
+						  <div class="form-group">
+                            <label for="input04">Powtórz Nowe Hasło</label>
+                            <input type="password" class="form-control" id="input04" value="secret" required=""> 
+							<small class="text-muted">Hasło podane ponownie w celu weryfikacji</small></div>
+                          <div class="form-group">
+                            <label for="input04">Stare Hasło</label>
+                            <input type="password" class="form-control" id="input04" value="secret" required=""> </div>
+
+
+                          
+                          <div class="form-actions d-flex justify-content-center">                           
+                            <button type="submit" class="btn btn-primary" disabled>Zmień Hasło</button>
+                          </div>
+                        </form>
+                        <!-- /form -->
+                      </div>
+					</div>
+				</div>
+	</div>
+</div><!-- /.container -->
+
+
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="bootstrap-4.0.0-dist/js/bootstrap.bundle.js"></script>
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="bootstrap-4.0.0-dist/js/bundle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+    <script src="bootstrap-4.0.0-dist/js/dashboard.js"></script>
+
+
+
+</body>
+</html>
