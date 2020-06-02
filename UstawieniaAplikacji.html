@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v4.0.1">
-    <title>Ustawienia Użytkownika</title>
+    <title>Ustawienia Aplikacji</title>
 
 	<!-- FontAwesome CSS -->
 	<script src="https://kit.fontawesome.com/9427ffaa84.js" crossorigin="anonymous"></script>
@@ -24,8 +24,11 @@
 <body>
 <!-- top nawigation bar-->
 <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top top-navbar">  
- 
-  <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   
@@ -54,18 +57,18 @@
 <!-- Finance Manager Content-->
 
 <div class="container-fluid bg">
-	<div class="row position-relative d-flex justify-content-center">
+	<div class="row position-relative">
 
                   <!-- grid column -->
-                  <div class="col-lg-2 pt-4">
+                  <div class="col-lg-4 pt-4">
                     <!-- .card -->
-                    <div class="card card-fluid user-menu">
+                    <div class="card card-fluid">
                       <h6 class="card-header"> Twoje Dane </h6>
                       <!-- .nav -->
                       <nav class="nav nav-tabs flex-column">
-                        <a href="UstawieniaUzytkownika-dane.html" class="nav-link"><span data-feather="clipboard"></span>Dane Profilowe</a>
-                        <a href="UstawieniaUzytkownika-haslo.html" class="nav-link"><span data-feather="lock"></span>Zmiana Hasła</a>
-						<a href="UstawieniaUzytkownika-email.html" class="nav-link active"><span data-feather="mail"></span>Zmiana Adresu Email</a>
+                        <a href="UstawieniaUzytkownika-dane.html" class="nav-link active">Dane Profilowe</a>
+                        <a href="UstawieniaUzytkownika-haslo.html" class="nav-link">Zmiana Hasła</a>
+						<a href="UstawieniaUzytkownika-email.html" class="nav-link">Zmiana Adresu Email</a>
                       </nav>
                       <!-- /.nav -->
                     </div>
@@ -74,21 +77,40 @@
                   <!-- /grid column -->
 				  
                   <!-- grid column -->
-                 <div class="col-lg-3 pt-4">
+                 <div class="col-lg-8 pt-4">
                     <!-- .card -->
                     <div class="card card-fluid">
-                      <h6 class="card-header"> Zmiana adresu email</h6>
+                      <h6 class="card-header"> Dane Twojego Konta </h6>
                       <!-- .card-body -->
                       <div class="card-body">
-					  <form>
-
-                          <div class="form-group">
-                            <label for="input04">Aktualny adres email:</label>
-                            <input type="text" class="form-control" id="input04" value="Konicki.andrzej@gmail.com" required=""> </div>
-                          
-                          <div class="form-actions d-flex justify-content-center">                           
-                            <button type="submit" class="btn btn-primary">Modyfikuj</button>
+                        <!-- form -->
+                        <form method="post">
+                          <!-- form row -->
+                          <div class="form-row">
+                            <!-- form column -->
+                            <div class="col-md-6 mb-3">
+                              <label for="input01">Imię</label>
+                              <input type="text" class="form-control" id="input01" value="Beni" required=""> </div>
+                            <!-- /form column -->
+                            <!-- form column -->
+                            <div class="col-md-6 mb-3">
+                              <label for="input02">Nazwisko</label>
+                              <input type="text" class="form-control" id="input02" value="Arisandi" required=""> </div>
+                            <!-- /form column -->
                           </div>
+                          <!-- /form row -->
+                          <!-- .form-group -->
+                          <div class="form-group">
+                            <label for="input03">Adres Email</label>
+                            <input type="email" class="form-control" id="input03" value="Your Email" required=""> </div>
+                          <!-- /.form-group -->
+                          <!-- .form-group -->
+                          <div class="form-group">
+                            <label for="input05">Login</label>
+                            <input type="text" class="form-control" id="input05" value="bent10" required="">
+                            <small class="text-muted">Dolores reiciendis, eos accusamus nobis at omnis consequuntur culpa tempore saepe animi.</small>
+                          </div>
+                          <!-- /.form-group -->
                         </form>
                         <!-- /form -->
                       </div>

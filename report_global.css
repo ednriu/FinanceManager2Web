@@ -245,6 +245,56 @@ input[type:number]{
 	background-color:white;
  }
  
+ /*
+ * INFO BOX
+ */
+ 
+ .info-box{
+	 background-color:#CAD0D4;
+	 width:12rem;
+	 height:8rem;
+	 border-radius:15px;
+	 border:#498192 solid 1px;
+	 text-align:center;
+	 font-size:1rem;
+	 vertical-align:middle;
+ }
+ 
+ .info-box .amount{
+	color:red;
+	position:relative;
+	top:20px;
+ }
+ 
+.info-box .feather{
+	color:red;
+	position:relative;
+	top:20px;
+}
+ 
+ .info-box.balance{
+	border:red solid 1px;
+ }
+ 
+.info-box h1{
+	 font-size:1.2rem;
+	 color:white;
+	 background-color:#498192;
+	 margin-left:0;
+	 margin-right:0;
+	 overflow:hidden;
+	 border-radius: 15px 15px 0 0;
+	 padding-bottom:0.3rem;
+ }
+ 
+ .info-box.balance h1{
+	 font-size:1.5rem;
+	 color:white;
+	 background-color:red;
+	 margin-left:0;
+	 margin-right:0;
+ }
+ 
 
 
 
