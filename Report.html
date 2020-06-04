@@ -15,8 +15,24 @@
 	<link href="bootstrap-4.0.0-dist/css/bootstrap.css" rel="stylesheet">
 	<link href="report_global.css" rel="stylesheet">
 	<link href="bootstrap-4.0.0-dist/css/dashboard.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 	
 	<script type="text/javascript" src="scr_wydatki_przychody.js"></script>
+	<script>
+			// Edit row on edit button click
+		$(document).on("click", ".edit", function(){		
+			$(this).parents("tr").find("td:not(:last-child)").each(function(){
+				$(this).html('<input type="text" class="form-control" value="' + $(this).text() + '">');
+			});		
+			$(this).parents("tr").find(".add, .edit").toggle();
+			$(".add-new").attr("disabled", "disabled");
+		});
+		// Delete row on delete button click
+		$(document).on("click", ".delete", function(){
+			$(this).parents("tr").remove();
+			$(".add-new").removeAttr("disabled");
+		});
+	</script>
   </head>
   
   
@@ -39,7 +55,7 @@
         <a class="nav-link" href="Report.html"><span class="navbar-text">Moje Finanse</span><span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="UstawieniaAplikacji.html"><span class="navbar-text">Aplikacja</span><span class="sr-only"></span></a>
+        <a class="nav-link" href="UstawieniaAplikacji-kategorie-wydatkow.html"><span class="navbar-text">Aplikacja</span><span class="sr-only"></span></a>
       </li>
       <li class="nav-item">
        <a class="nav-link" href="UstawieniaUzytkownika-dane.html"><span class="navbar-text">Użytkownik</span><span class="sr-only"></span></a>
@@ -110,22 +126,22 @@
 		<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4 pt-lg-3 pt-md-5">
 		
 		<div class="row d-flex justify-content-center mt-3">
-			<div class="col-lg-3 d-flex justify-content-center">
+			<div class="col-lg-3 col-sm-3 d-flex justify-content-center">
 				<div class="info-box">
 					<h1 class="text-center py-1">Suma Wpływów</h1>
-					<span data-feather="plus-square"></span> 120zł
+						<div class="row justify-content-center mt-4"><span data-feather="plus-square"></span> <p class="balance font-weight-bold">120zł</p></div>
 				</div>
 			</div>
-			<div class="col-lg-3 d-flex justify-content-center">
+			<div class="col-lg-3 col-sm-3 d-flex justify-content-center">
 				<div class="info-box balance">
 					<h1 class="text-center py-1">Bilans</h1>
-					<span data-feather="info"></span> 45zł
+					<div class="row justify-content-center mt-4"><span data-feather="info"></span> <p class="balance font-weight-bold">145zł</p></div>
 				</div>
 			</div>
-			<div class="col-lg-3 d-flex justify-content-center">
+			<div class="col-lg-3 col-sm-3 d-flex justify-content-center">
 				<div class="info-box">
 					<h1 class="text-center py-1">Suma Wydatków</h1>
-					<span data-feather="minus-square"></span> 180zł
+					<div class="row justify-content-center mt-4"><span data-feather="minus-square"></span> <p class="balance font-weight-bold">180zł</p></div>
 				</div>
 			</div>
 		</div>
@@ -143,6 +159,7 @@
 							  <th>Kwota [zł]</th>
 							  <th>Kategoria</th>
 							  <th>Komentarz</th>
+							  <th>*</th>
 							</tr>
 						  </thead>
 						  <tbody>
@@ -152,13 +169,18 @@
 							  <td>15</td>
 							  <td>odsetki</td>
 							  <td></td>
-							</tr>
+							  <td><a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+									<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>
+							  </tr>
 							<tr>
 							  <td>2</td>
 							  <td>22.05.2020</td>
 							  <td>16</td>
 							  <td>praca</td>
 							  <td></td>
+							  <td><a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+									<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>
+							  </tr>
 							</tr>
 							<tr>
 							  <td>3</td>
@@ -166,6 +188,9 @@
 							  <td>17</td>
 							  <td>programowanie</td>
 							  <td>wymiana oleju</td>
+							  <td><a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+									<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>
+							  </tr>
 							</tr>
 							<tr>
 							  <td>4</td>
@@ -173,6 +198,9 @@
 							  <td>15</td>
 							  <td>odsetki</td>
 							  <td></td>
+							  <td><a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+									<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>
+							  </tr>
 							</tr>
 							<tr>
 							  <td>5</td>
@@ -180,6 +208,9 @@
 							  <td>16</td>
 							  <td>praca</td>
 							  <td></td>
+							  <td><a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+									<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>
+							  </tr>
 							</tr>
 							<tr>
 							  <td>6</td>
@@ -187,6 +218,9 @@
 							  <td>17</td>
 							  <td>programowanie</td>
 							  <td>wymiana oleju</td>
+							  <td><a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+									<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>
+							  </tr>
 							</tr>						
 						  </tbody>
 						</table>
@@ -210,6 +244,7 @@
 							  <th>Kwota [zł]</th>
 							  <th>Kategoria</th>
 							  <th>Komentarz</th>
+							  <th>*</th>
 							</tr>
 						  </thead>
 						  <tbody>
@@ -219,6 +254,8 @@
 							  <td>15</td>
 							  <td>odsetki</td>
 							  <td></td>
+							  <td><a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+									<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>
 							</tr>
 							<tr>
 							  <td>1</td>
@@ -226,6 +263,8 @@
 							  <td>16</td>
 							  <td>praca</td>
 							  <td></td>
+							  <td><a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+									<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>
 							</tr>
 							<tr>
 							  <td>1</td>
@@ -233,6 +272,8 @@
 							  <td>17</td>
 							  <td>programowanie</td>
 							  <td>wymiana oleju</td>
+							  <td><a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+									<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>
 							</tr>						
 						  </tbody>
 						</table>

@@ -35,8 +35,8 @@ body {
 
 .table-scrolling{
 	height:400px;
-	overflow-y:auto;
-	overflow-x: hidden;
+	overflow-y:hidden;
+	overflow-x: auto;
 	position:relative;
 	display:block;
 }
@@ -55,6 +55,36 @@ table.table-bordered > tbody > tr > td{
 .table-responsive.inc-exp-area h1{
 	color:#2C1B6F;
 }
+table.table th:last-child {
+        width: 80px;
+    }
+table.table td a {
+	cursor: pointer;
+	display: inline-block;
+	margin: 0 2px;
+	min-width: 10px;
+}    
+
+table.table td a.edit {
+	color: #FFC107;
+}
+table.table td a.delete {
+	color: #E34724;
+}
+table.table td i {
+	font-size: 19px;
+}
+ 
+table.table .form-control {
+	height: 32px;
+	line-height: 32px;
+	box-shadow: none;
+	border-radius: 2px;
+}
+table.table .form-control.error {
+	border-color: #f50000;
+}
+
 
 
 /*
@@ -142,6 +172,8 @@ table.table-bordered > tbody > tr > td{
 	color:#FAF70C;
 	line-height:1rem;
 	font-size:1.2rem;
+	font-weight:bold;
+	letter-spacing:0.1rem;
 }
 
 .navbar .active .navbar-text{
@@ -215,6 +247,7 @@ input[type:number]{
 
 /*
  * User Settings Cards
+ * Aplication Settings Cards
  */
  
  .card-header{
@@ -260,19 +293,19 @@ input[type:number]{
 	 vertical-align:middle;
  }
  
- .info-box .amount{
-	color:red;
-	position:relative;
-	top:20px;
- }
- 
-.info-box .feather{
-	color:red;
-	position:relative;
-	top:20px;
+p.balance{
+	color:#47865A;
+	font-size:1.2rem;
 }
  
- .info-box.balance{
+.info-box .feather{
+	color:#1336F8;
+	font-size:1.2rem;
+	position:relative;
+	top:3px;
+}
+ 
+.info-box.balance{
 	border:red solid 1px;
  }
  
@@ -288,12 +321,29 @@ input[type:number]{
  }
  
  .info-box.balance h1{
-	 font-size:1.5rem;
-	 color:white;
 	 background-color:red;
-	 margin-left:0;
-	 margin-right:0;
  }
+ 
+  /*
+ * EXTRAS
+ */
+ 
+ button.close {
+        color: #fff7cc;
+        display: inline-block;
+        float: right;
+        font-size: 34px;
+        height: 40px;
+        line-height: 1;
+        margin: 0px 1px;
+        opacity: 1;
+        text-align: center;
+        text-shadow: none;
+        -webkit-transition: background 0.2s ease-in-out;
+        transition: background 0.2s ease-in-out;
+        vertical-align: top;
+        width: 46px;
+    }
  
 
 
