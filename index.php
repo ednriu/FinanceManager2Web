@@ -1,6 +1,7 @@
 <?php
 
 	session_start();
+	echo 'wykonuje';
 	
 	if (isset($_POST['email']))
 	{
@@ -15,6 +16,7 @@
 		{
 			$wszystko_OK=false;
 			$_SESSION['e_nick']="Nick musi posiadać od 3 do 20 znaków!";
+			echo 'wykonuje';
 		}
 		
 		if (ctype_alnum($nick)==false)
@@ -51,31 +53,21 @@
 
 		$haslo_hash = password_hash($haslo1, PASSWORD_DEFAULT);
 		
-		//Czy zaakceptowano regulamin?
-		if (!isset($_POST['regulamin']))
+		//sprawdza poprawność imienia
+		$imie = $_POST['imie'];
+		
+		if (strlen($imie)<3)
 		{
 			$wszystko_OK=false;
-			$_SESSION['e_regulamin']="Potwierdź akceptację regulaminu!";
-		}				
-		
-		//Bot or not? Oto jest pytanie!
-		$sekret = "PODAJ WŁASNY SEKRET!";
-		
-		$sprawdz = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$sekret.'&response='.$_POST['g-recaptcha-response']);
-		
-		$odpowiedz = json_decode($sprawdz);
-		
-		if ($odpowiedz->success==false)
-		{
-			$wszystko_OK=false;
-			$_SESSION['e_bot']="Potwierdź, że nie jesteś botem!";
-		}		
+			$_SESSION['e_imie']="Imie musi być dłuższe od 2 znaków";
+		}
 		
 		//Zapamiętaj wprowadzone dane
 		$_SESSION['fr_nick'] = $nick;
 		$_SESSION['fr_email'] = $email;
 		$_SESSION['fr_haslo1'] = $haslo1;
 		$_SESSION['fr_haslo2'] = $haslo2;
+		$_SESSION['fr_imie'] = $imie;
 		if (isset($_POST['regulamin'])) $_SESSION['fr_regulamin'] = true;
 		
 		require_once "connect.php";
@@ -91,7 +83,7 @@
 			else
 			{
 				//Czy email już istnieje?
-				$rezultat = $polaczenie->query("SELECT id FROM uzytkownicy WHERE email='$email'");
+				$rezultat = $polaczenie->query("SELECT user_id FROM users WHERE mail='$email'");
 				
 				if (!$rezultat) throw new Exception($polaczenie->error);
 				
@@ -103,7 +95,7 @@
 				}		
 
 				//Czy nick jest już zarezerwowany?
-				$rezultat = $polaczenie->query("SELECT id FROM uzytkownicy WHERE user='$nick'");
+				$rezultat = $polaczenie->query("SELECT user_id FROM users WHERE login='$nick'");
 				
 				if (!$rezultat) throw new Exception($polaczenie->error);
 				
@@ -117,11 +109,11 @@
 				if ($wszystko_OK==true)
 				{
 					//Hurra, wszystkie testy zaliczone, dodajemy gracza do bazy
-					
-					if ($polaczenie->query("INSERT INTO uzytkownicy VALUES (NULL, '$nick', '$haslo_hash', '$email', 100, 100, 100, 14)"))
+					echo 'wszystko ok';
+					if ($polaczenie->query("INSERT INTO users VALUES (NULL, '$nick', '$haslo_hash', '$imie', '$email')"))
 					{
 						$_SESSION['udanarejestracja']=true;
-						header('Location: witamy.php');
+						header('Location: index.php');
 					}
 					else
 					{
@@ -176,6 +168,15 @@
 					<button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#loginModal"><i class="fas fa-user"></i> Zaloguj</button>
 					<button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#registerModal"><i class="fas fa-caret-square-right"></i> Rejestracja</button>
 				</div>
+
+				<?php					
+					if (($_POST['wszystko_OK']==true) && isset($_POST['email']))
+						echo 'Zostałeś zarejestrowany';
+				?>
+
+				<div class="alert alert-primary" role="alert">
+					Zostałeś zarejestrowany jako nowy użytkownik. Możesz się teraz zalogować.
+				</div>
 				
 				<!--Logowanie-->
 				<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -224,7 +225,10 @@
 
 					
 				<!--Rejestracja-->
-				<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal fade <?php					
+					if (($wszystko_OK==false) && isset($_POST['email']))
+						echo 'show d-block';
+				?>" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				  <div class="modal-dialog form-logowanie">
 					<div class="modal-content">
 					
@@ -235,29 +239,105 @@
 							</button>
 						 </div>
 						<div class="modal-body rejestracja">					
-							<form>
+							<form method="post">
 								<div>
+								
+								<!--Login-->
 								  <div class="form-group">
 									<label for="register_login">Login:</label>
-									<input type="text" class="form-control" id="register_login" placeholder="Twój Login">
+									<input type="text" class="form-control" name="nick" id="register_login" value="<?php
+										if (isset($_SESSION['fr_nick']))
+										{
+											echo $_SESSION['fr_nick'];
+											unset($_SESSION['fr_nick']);
+										}
+										?>" placeholder="Twój Login">
+									<?php
+										if (isset($_SESSION['e_nick']))
+										{
+											echo '<div class="error">'.$_SESSION['e_nick'].'</div>';
+											unset($_SESSION['e_nick']);
+										}
+									?>
 									<small id="register_loginHelp" class="form-text text-muted">Login powinien składać się conajmniej z 6 liter.</small>								
 								  </div>
+								  
+								  <!--Hasło1-->
 								  <div class="form-group">
 									<label for="reg_exampleInputPassword1">Hasło:</label>
-									<input type="password" class="form-control" id="reg_exampleInputPassword1" placeholder="Twoje Hasło">
+									<input type="password" class="form-control" name="haslo1" id="reg_exampleInputPassword1" value="<?php
+										if (isset($_SESSION['fr_haslo1']))
+										{
+											echo $_SESSION['fr_haslo1'];
+											unset($_SESSION['fr_haslo1']);
+										}
+									?>"placeholder="Twoje Hasło">
+									<?php
+										if (isset($_SESSION['e_haslo1']))
+										{
+											echo '<div class="error">'.$_SESSION['e_haslo1'].'</div>';
+											unset($_SESSION['e_haslo1']);
+										}
+									?>
 									<small id="register_passwordHelp" class="form-text text-muted text-justify">Hasło powinno składać się conajmniej z 6 znaków, powinno zawierać conajmniej jedną wielka literę oraz cyfrę.</small>
 								  </div>
+								  
+								  <!--Hasło2-->
 								  <div class="form-group">
 									<label for="reg_exampleInputPassword2">Powtórz Hasło:</label>
-									<input type="password" class="form-control" id="reg_exampleInputPassword2" placeholder="Twoje Hasło">
+									<input type="password" class="form-control" name="haslo2" id="reg_exampleInputPassword2" value="<?php
+										if (isset($_SESSION['fr_haslo2']))
+										{
+											echo $_SESSION['fr_haslo2'];
+											unset($_SESSION['fr_haslo2']);
+										}
+									?>"placeholder="Twoje Hasło">
+									
+									<?php
+										if (isset($_SESSION['e_haslo2']))
+										{
+											echo '<div class="error">'.$_SESSION['e_haslo2'].'</div>';
+											unset($_SESSION['e_haslo2']);
+										}
+									?>
 								  </div>
+								  
+								 <!--Imię-->
 								 <div class="form-group">
 									<label for="register_name">Imię:</label>
-									<input type="text" class="form-control" id="register_name" placeholder="Twoje Imię">					
+									<input type="text" class="form-control" name="imie" id="register_name" value="<?php
+										if (isset($_SESSION['fr_email']))
+										{
+											echo $_SESSION['fr_email'];
+											unset($_SESSION['fr_email']);
+										}
+									?>" placeholder="Twoje Imię">
+									<?php
+										if (isset($_SESSION['e_imie']))
+										{
+											echo '<div class="error">'.$_SESSION['e_imie'].'</div>';
+											unset($_SESSION['e_imie']);
+										}
+									?>									
 								  </div>
+								  
+								  <!--Email-->
 								  <div class="form-group">
 									<label for="register_email">Email:</label>
-									<input type="text" class="form-control" id="register_email" placeholder="Adres poczty elektronicznej">					
+									<input type="text" class="form-control" name="email" id="register_email" value="<?php
+										if (isset($_SESSION['fr_email']))
+										{
+											echo $_SESSION['fr_email'];
+											unset($_SESSION['fr_email']);
+										}
+									?>" placeholder="Adres poczty elektronicznej">				
+									<?php
+										if (isset($_SESSION['e_email']))
+										{
+											echo '<div class="error">'.$_SESSION['e_email'].'</div>';
+											unset($_SESSION['e_email']);
+										}
+									?>					
 								  </div>
 								 </div>
 								  <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-sign-in-alt"></i> Zarejestruj</button>
