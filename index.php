@@ -1,7 +1,6 @@
 <?php
 
 	session_start();
-	echo 'wykonuje';
 	
 	if (isset($_POST['email']))
 	{
@@ -16,7 +15,6 @@
 		{
 			$wszystko_OK=false;
 			$_SESSION['e_nick']="Nick musi posiadać od 3 do 20 znaków!";
-			echo 'wykonuje';
 		}
 		
 		if (ctype_alnum($nick)==false)
@@ -113,12 +111,14 @@
 					if ($polaczenie->query("INSERT INTO users VALUES (NULL, '$nick', '$haslo_hash', '$imie', '$email')"))
 					{
 						$_SESSION['udanarejestracja']=true;
+						$_SESSION['wszystko_OK'] = $wszystko_OK;
 						header('Location: index.php');
 					}
 					else
 					{
 						throw new Exception($polaczenie->error);
 					}
+
 					
 				}
 				
@@ -167,18 +167,20 @@
 				<div class="start-buttons">
 					<button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#loginModal"><i class="fas fa-user"></i> Zaloguj</button>
 					<button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#registerModal"><i class="fas fa-caret-square-right"></i> Rejestracja</button>
-				</div>
+				</div>	
 
-				<?php					
-					if (($_POST['wszystko_OK']==true) && isset($_POST['email']))
-						echo 'Zostałeś zarejestrowany';
-				?>
-
-				<div class="alert alert-primary" role="alert">
-					Zostałeś zarejestrowany jako nowy użytkownik. Możesz się teraz zalogować.
-				</div>
+				<?php
 				
-				<!--Logowanie-->
+					if (isset($_SESSION['udanarejestracja']))
+					{
+								echo '<div class="mt-5 alert alert-success" role="alert">
+										Proces rejestracji użytkownika zakończony sukcesem!
+									  </div>';
+								unset($_SESSION['udanarejestracja']);			
+					}
+				?>
+				
+				<!--Modal Logowanie-->
 				<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				  <div class="modal-dialog  form-logowanie">
 					<div class="modal-content">					
@@ -221,20 +223,17 @@
 						
 					</div>
 				  </div>
-					  
 
-					
-				<!--Rejestracja-->
-				<div class="modal fade <?php					
+				<!--Modal Rejestracja-->
+				<div class="modal fade <?php
 					if (($wszystko_OK==false) && isset($_POST['email']))
 						echo 'show d-block';
 				?>" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				  <div class="modal-dialog form-logowanie">
-					<div class="modal-content">
-					
+					<div class="modal-content">					
 						<div class="modal-header">
 							<h5 class="modal-title" id="exampleModalLabel">Logowanie użytkownika</h5>
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<button type="button" class="close" onclick = "$('.modal').removeClass('show d-block').addClass('fade');" data-dismiss="modal" aria-label="Close">
 							  <span aria-hidden="true">&times;</span>
 							</button>
 						 </div>
@@ -254,12 +253,11 @@
 										?>" placeholder="Twój Login">
 									<?php
 										if (isset($_SESSION['e_nick']))
-										{
-											echo '<div class="error">'.$_SESSION['e_nick'].'</div>';
+										{											
+											echo '<div class="alert alert-warning mt-1" role="alert"><small>'.$_SESSION['e_nick'].'</small></div>';
 											unset($_SESSION['e_nick']);
 										}
-									?>
-									<small id="register_loginHelp" class="form-text text-muted">Login powinien składać się conajmniej z 6 liter.</small>								
+									?>								
 								  </div>
 								  
 								  <!--Hasło1-->
@@ -275,7 +273,7 @@
 									<?php
 										if (isset($_SESSION['e_haslo1']))
 										{
-											echo '<div class="error">'.$_SESSION['e_haslo1'].'</div>';
+											echo '<div class="alert alert-warning mt-1" role="alert"><small>'.$_SESSION['e_haslo1'].'</small></div>';
 											unset($_SESSION['e_haslo1']);
 										}
 									?>
@@ -296,7 +294,7 @@
 									<?php
 										if (isset($_SESSION['e_haslo2']))
 										{
-											echo '<div class="error">'.$_SESSION['e_haslo2'].'</div>';
+											echo '<div class="alert alert-warning mt-1" role="alert"><small>'.$_SESSION['e_haslo2'].'</small></div>';
 											unset($_SESSION['e_haslo2']);
 										}
 									?>
@@ -306,16 +304,16 @@
 								 <div class="form-group">
 									<label for="register_name">Imię:</label>
 									<input type="text" class="form-control" name="imie" id="register_name" value="<?php
-										if (isset($_SESSION['fr_email']))
+										if (isset($_SESSION['fr_imie']))
 										{
-											echo $_SESSION['fr_email'];
-											unset($_SESSION['fr_email']);
+											echo $_SESSION['fr_imie'];
+											unset($_SESSION['fr_imie']);
 										}
 									?>" placeholder="Twoje Imię">
 									<?php
 										if (isset($_SESSION['e_imie']))
 										{
-											echo '<div class="error">'.$_SESSION['e_imie'].'</div>';
+											echo '<div class="alert alert-warning mt-1" role="alert"><small>'.$_SESSION['e_imie'].'</small></div>';
 											unset($_SESSION['e_imie']);
 										}
 									?>									
@@ -334,14 +332,14 @@
 									<?php
 										if (isset($_SESSION['e_email']))
 										{
-											echo '<div class="error">'.$_SESSION['e_email'].'</div>';
+											echo '<div class="alert alert-warning mt-1" role="alert"><small>'.$_SESSION['e_email'].'</small></div>';
 											unset($_SESSION['e_email']);
 										}
 									?>					
 								  </div>
-								 </div>
+								</div>
 								  <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-sign-in-alt"></i> Zarejestruj</button>
-								  <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Anuluj</button>
+								  <button type="button" class="btn btn-secondary btn-block" onclick = "$('.modal').removeClass('show d-block').addClass('fade');" data-dismiss="modal">Anuluj</button>
 							</form>
 						</div>
 						</div>			
