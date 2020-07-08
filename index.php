@@ -2,7 +2,7 @@
 
 	session_start();
 	
-	if (isset($_POST['email']))
+	if (isset($_POST['email']) && !isset($_SESSION['udanarejestracja']))
 	{
 		//Udana walidacja? Załóżmy, że tak!
 		$wszystko_OK=true;
@@ -176,7 +176,7 @@
 								echo '<div class="mt-5 alert alert-success" role="alert">
 										Proces rejestracji użytkownika zakończony sukcesem!
 									  </div>';
-								unset($_SESSION['udanarejestracja']);			
+											
 					}
 				?>
 				
