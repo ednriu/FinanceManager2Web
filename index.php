@@ -61,6 +61,18 @@
 			$_SESSION['e_imie']="Imie musi być dłuższe od 2 znaków";
 		}
 		
+		//Sprawdzanie Recaptchy
+		$sekret = "6LdEmLAZAAAAABGVjHf3l3LGJBaVxHZeN2olnPw4";		
+		$sprawdz = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$sekret.'&response='.$_POST['g-recaptcha-response']);		
+		$odpowiedz = json_decode($sprawdz);		
+		if ($odpowiedz->success==false)
+		{
+			$wszystko_OK=false;
+			$_SESSION['e_bot']="Potwierdź, że nie jesteś botem!";
+		}
+		
+		
+		
 		//Zapamiętaj wprowadzone dane
 		$_SESSION['fr_nick'] = $nick;
 		$_SESSION['fr_email'] = $email;
@@ -157,7 +169,8 @@
 	<script src="https://kit.fontawesome.com/9427ffaa84.js" crossorigin="anonymous"></script>
 	<!-- Global CSS -->
 	<link rel="stylesheet" type="text/css" href="index_global.css">
-
+	<!-- Recaptcha -->
+	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
   </head>
 <body>
@@ -229,7 +242,7 @@
 							</button>
 						 </div>
 						<div class="modal-body rejestracja">					
-							<form method="post">
+							<form method="post" id='formularz_rej'>
 								<div>
 								
 								<!--Login-->
@@ -328,7 +341,18 @@
 										}
 									?>					
 								  </div>
+								  <!--Recaptcha-->
+								  <div class="form=group"><div class="g-recaptcha d-flex" data-sitekey="6LdEmLAZAAAAAE9dRZIUDMJkNs3Avgm7C6LCBm3z"></div></div>
+								  	<?php
+										if (isset($_SESSION['e_bot']))
+										{
+											echo '<div class="error">'.$_SESSION['e_bot'].'</div>';
+											unset($_SESSION['e_bot']);
+										}
+									?>
 								</div>
+	
+								
 								  <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-sign-in-alt"></i> Zarejestruj</button>
 								  <button type="button" class="btn btn-secondary btn-block" onclick = "$('.modal').removeClass('show d-block').addClass('fade');" data-dismiss="modal">Anuluj</button>
 							</form>
