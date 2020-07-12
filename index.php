@@ -2,6 +2,7 @@
 
 	session_start();
 	
+	
 	if (isset($_POST['email']) && !isset($_SESSION['udanarejestracja']))
 	{
 		//Udana walidacja? Załóżmy, że tak!
@@ -107,12 +108,12 @@
 				if ($wszystko_OK==true)
 				{
 					//Hurra, wszystkie testy zaliczone, dodajemy gracza do bazy
-					echo 'wszystko ok';
 					if ($polaczenie->query("INSERT INTO users VALUES (NULL, '$nick', '$haslo_hash', '$imie', '$email')"))
 					{
-						$_SESSION['udanarejestracja']=true;
+						$_SESSION['udanarejestracja'] = $wszystko_OK;
 						$_SESSION['wszystko_OK'] = $wszystko_OK;
-						header('Location: index.php');
+						unset($_POST['email']);
+						header('Location: witamy.php');
 					}
 					else
 					{
@@ -169,17 +170,7 @@
 					<button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#registerModal"><i class="fas fa-caret-square-right"></i> Rejestracja</button>
 				</div>	
 
-				<?php
-				
-					if (isset($_SESSION['udanarejestracja']))
-					{
-								echo '<div class="mt-5 alert alert-success" role="alert">
-										Proces rejestracji użytkownika zakończony sukcesem!
-									  </div>';
-											
-					}
-				?>
-				
+			
 				<!--Modal Logowanie-->
 				<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				  <div class="modal-dialog  form-logowanie">
@@ -226,7 +217,7 @@
 
 				<!--Modal Rejestracja-->
 				<div class="modal fade <?php
-					if (($wszystko_OK==false) && isset($_POST['email']))
+					if (($wszystko_OK == false) && isset($_POST['email']))
 						echo 'show d-block';
 				?>" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				  <div class="modal-dialog form-logowanie">
