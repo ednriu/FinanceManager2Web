@@ -1,3 +1,7 @@
+<?php
+	session_start();
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -61,7 +65,7 @@
        <a class="nav-link" href="UstawieniaUzytkownika-dane.html"><span class="navbar-text">Użytkownik</span><span class="sr-only"></span></a>
       </li>
 	  <li class="nav-item">
-        <a class="nav-link" href="index.html"><span class="navbar-text">Wyloguj</span><span class="sr-only"></span></a>
+        <a class="nav-link" href="logout.php"><span class="navbar-text">Wyloguj</span><span class="sr-only"></span></a>
       </li>
     </ul>
     <form class="form-inline my-2 my-lg-0">
@@ -80,7 +84,8 @@
 	<!--side Bar Menu-->
 		<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
 		  <div class="sidebar-sticky pt-lg-3 pt-md-5">		  
-			<ul class="nav flex-column pt-2">			
+			<ul class="nav flex-column pt-2">	
+			<?php echo $_SESSION['name']; ?>
 			  <li class="nav-item">
 				<a class="nav-link" href="#" data-toggle="modal" data-target="#modalExpense">
 				  <span data-feather="credit-card"></span>

@@ -2,7 +2,15 @@
 
 	session_start();
 	
+	//Czesc Logowania
 	
+	if ((isset($_SESSION['zalogowany'])) && ($_SESSION['zalogowany']==true))
+	{
+		header('Location: report.php');
+		exit();
+	}
+	
+	//Czesc Rejestracji
 	if (isset($_POST['email']) && !isset($_SESSION['udanarejestracja']))
 	{
 		//Udana walidacja? Załóżmy, że tak!
@@ -195,18 +203,18 @@
 							</button>
 						 </div>
 						<div class="modal-body logowanie">
-							<form>
+							<form action="zaloguj.php" method="post">
 								<div class="text-center">
 									<img src="img/user_img/user_img.png" class="rounded user_img" alt="">
 								</div>
 								<div>
 								  <div class="form-group login-form">
 									<label for="login">Twój Login:</label>
-									<input type="text" class="form-control" id="login" placeholder="Twój Login">			
+									<input type="text" class="form-control" name="login" id="login" placeholder="Twój Login">			
 								  </div>
 								  <div class="form-group login-form">
-									<label for="exampleInputPassword1">Hasło</label>
-									<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Twoje Hasło">
+									<label for="haslo">Hasło</label>
+									<input type="password" class="form-control" name="haslo" id="haslo" placeholder="Twoje Hasło">
 									<small id="emailHelp" class="form-text text-muted">Rekomendujemy wpisywać hasło zasłonięte gwiazdkami.</small>
 								  </div>
 								  <div class="form-group login-form form-check">
@@ -219,6 +227,10 @@
 								  <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Anuluj</button>
 							</form>
 						</div>
+						
+						<?php
+							if(isset($_SESSION['blad']))	echo $_SESSION['blad'];
+						?>
 						
 						<div class="modal-footer">
 							<small id="logingHelp" class="form-text text-muted">Problemy z logowaniem?</small>
