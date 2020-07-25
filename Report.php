@@ -1,5 +1,33 @@
 <?php
 	session_start();
+	error_reporting(E_ALL);
+	require_once "connect.php";
+	$polaczenie = @new mysqli($host, $db_user, $db_password, $db_name);
+	
+	if ($polaczenie->connect_errno!=0)
+	{
+		echo "Error: ".$polaczenie->connect_errno;
+	}
+	else
+	{
+		//pobieranie kategorii wydatków
+		$exp_cat = $polaczenie->query('SELECT cat_id,cat_name FROM expence_categories');
+		$exp_cat_names = array();   //array for category names
+		While ($categories_list = $exp_cat->fetch_assoc()) {
+			//Add newest 'cat_name' to the array
+			$exp_cat_names[] = $categories_list['cat_name'];
+		}
+		
+		//pobieranie kategorii wpływów
+		$inc_cat = $polaczenie->query('SELECT cat_id,cat_name FROM income_categories');
+		$inc_cat_names = array();   //array for category names
+		While ($categories_list = $inc_cat->fetch_assoc()) {
+			//Add newest 'cat_name' to the array
+			$inc_cat_names[] = $categories_list['cat_name'];
+		}
+	}
+	
+	
 ?>
 
 <!doctype html>
@@ -85,7 +113,7 @@
 		<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
 		  <div class="sidebar-sticky pt-lg-3 pt-md-5">		  
 			<ul class="nav flex-column pt-2">	
-			<?php echo $_SESSION['name']; ?>
+			<?php echo 'witaj:'.$_SESSION['name']; ?>
 			  <li class="nav-item">
 				<a class="nav-link" href="#" data-toggle="modal" data-target="#modalExpense">
 				  <span data-feather="credit-card"></span>
@@ -316,10 +344,12 @@
 					  <div class="form-group">
 						<label for="kategoriaInput">Kategoria:</label>
 						<select multiple class="form-control" id="kategoriaInput">
-						  <option>Wynagrodzenie za Pracę</option>
-						  <option>Odsetki</option>
-						  <option>Allegro</option>
-						  <option>Inne</option>
+						
+						<?php
+							foreach ($inc_cat_names as $inc_cat_name){
+							echo "<option value=\"".$inc_cat_name."\" >$inc_cat_name </option>";
+							}
+							?>
 						</select>
 					  </div>
 					  <div class="form-group">
@@ -382,20 +412,11 @@
 					  <div class="form-group">
 						<label for="kategoriaInput">Kategoria:</label>
 						<select multiple class="form-control" id="kategoriaInput">
-						  <option>Jedzenie</option>
-						  <option>Mieszkanie</option>
-						  <option>Transport</option>
-						  <option>Telekomunikacja</option>
-						  <option>Opieka Zdrowotna</option>
-						  <option>Higiena</option>
-						  <option>Wycieczka</option>
-						  <option>Szkolenia</option>
-						  <option>Książki</option>
-						  <option>Oszczędności</option>
-						  <option>Emerytura</option>
-						  <option>Spłata Długów</option>
-						  <option>Darowizna</option>
-						  <option>Inne</option>
+							<?php
+							foreach ($exp_cat_names as $exp_cat_name){
+							echo "<option value=\"".$exp_cat_name."\" >$exp_cat_name </option>";
+							}
+							?>
 						</select>
 					  </div>
 					  <div class="form-group">

@@ -248,7 +248,7 @@
 				  <div class="modal-dialog form-logowanie">
 					<div class="modal-content">					
 						<div class="modal-header">
-							<h5 class="modal-title" id="exampleModalLabel">Logowanie użytkownika</h5>
+							<h5 class="modal-title" id="exampleModalLabel">Rejestracja użytkownika</h5>
 							<button type="button" class="close" onclick = "$('.modal').removeClass('show d-block').addClass('fade');" data-dismiss="modal" aria-label="Close">
 							  <span aria-hidden="true">&times;</span>
 							</button>
