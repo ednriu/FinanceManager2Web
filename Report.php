@@ -10,7 +10,7 @@
 	}
 	else
 	{
-		//pobieranie kategorii wydatków
+		//pobieranie kategorii wydatków do wypełnienia pola Select w formularzu
 		$exp_cat = $polaczenie->query('SELECT cat_id,cat_name FROM expence_categories');
 		$exp_cat_names = array();   //array for category names
 		While ($categories_list = $exp_cat->fetch_assoc()) {
@@ -18,15 +18,42 @@
 			$exp_cat_names[] = $categories_list['cat_name'];
 		}
 		
-		//pobieranie kategorii wpływów
+		//pobieranie kategorii wpływów do wypełnienia pola Select w formularzu
 		$inc_cat = $polaczenie->query('SELECT cat_id,cat_name FROM income_categories');
 		$inc_cat_names = array();   //array for category names
 		While ($categories_list = $inc_cat->fetch_assoc()) {
 			//Add newest 'cat_name' to the array
 			$inc_cat_names[] = $categories_list['cat_name'];
 		}
+		
+		
+		//przetwarzanie formularza dodawania wydatków
+		if (isset($_POST['expenceAmmount']))
+		{
+
+			$expenceAmmount = $_POST['expenceAmmount'];
+			$expenceDate = $_POST['expenceDatePicker']; 
+			$expenceCategory = $_POST['kategoriaInput']; 
+			$userId = $_SESSION['id'];
+			$expenceComment = $_POST['komentarzInput'];
+			
+			//pobieranie numeru kategorii wydatków
+			$exp_cat = $polaczenie->query("SELECT cat_id FROM expence_categories WHERE cat_name='$expenceCategory'");
+			if ($categories_list = $exp_cat->fetch_assoc()) {
+				//Add newest 'cat_name' to the array
+				$expenceCategoryId = $categories_list['cat_id'];
+			}		
+
+			$sql = "INSERT INTO `expences` (`date`, `ammount`, `category_id`, `user_id`, `comment`) VALUES (STR_TO_DATE('$expenceDate', '%Y-%m-%d'),".$expenceAmmount.",'$expenceCategoryId','$userId','$expenceComment')";
+			
+			if(mysqli_query($polaczenie, $sql)){
+				//sukces
+			} else{
+				//porażka
+				echo "ERROR: Could not able to execute $sql. " . mysqli_error($polaczenie);
+			}
+		}
 	}
-	
 	
 ?>
 
@@ -337,18 +364,17 @@
 							<input type="number" min="0" step="0.01" data-number-to-fixed="2" data-number-stepfactor="100" class="form-control currency" id="incomeAmmount" />
 					  </div>
 					  <div class="form-group">
-						<label for="datePicker">Data:</label>
-						<input type="date" class="form-control" id="datePicker" placeholder="dd-mm-yyyy">
+						<label for="incomeDatePicker">Data:</label>
+						<input type="date" class="form-control" id="incomeDatePicker" placeholder="dd-mm-yyyy">
 						<script>TodayDate();</script>
 					  </div>
 					  <div class="form-group">
 						<label for="kategoriaInput">Kategoria:</label>
-						<select multiple class="form-control" id="kategoriaInput">
-						
-						<?php
-							foreach ($inc_cat_names as $inc_cat_name){
-							echo "<option value=\"".$inc_cat_name."\" >$inc_cat_name </option>";
-							}
+						<select multiple class="form-control" name="kategoriaIncome" id="kategoriaIncome">						
+							<?php
+								foreach ($inc_cat_names as $inc_cat_name){
+								echo "<option value=\"".$inc_cat_name."\" >$inc_cat_name </option>";
+								}
 							?>
 						</select>
 					  </div>
@@ -376,59 +402,59 @@
 					  <span aria-hidden="true">&times;</span>
 					</button>
 				  </div>
-				  <div class="modal-body">
-					<form>
-					  <div class="form-group">
-						<label for="kwotaInput">Kwota:</label>
-						<input type="number" min="0" step="0.01" data-number-to-fixed="2" data-number-stepfactor="100" class="form-control currency" id="expenceAmmount" />
+				  <form method="post" id="add_expence">
+					  <div class="modal-body">
+						
+						  <div class="form-group">
+							<label for="kwotaInput">Kwota:</label>
+							<input type="number" min="0" step="0.01" data-number-to-fixed="2" data-number-stepfactor="100" class="form-control currency" name="expenceAmmount" id="expenceAmmount" />
+						  </div>
+						  <div class="form-group">
+							<label for="expenceDatePicker">Data:</label>
+							<input type="date" class="form-control" name="expenceDatePicker" id="expenceDatePicker" placeholder="yyyy-mm-dd">
+							<script>TodayDate();</script>
+						  </div>
+						  <div class="form-group">
+								 <label for="radios">Forma płatności:</label>
+										<div class="form-check">
+										  <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="optionGotowka" checked>
+										  <label class="form-check-label" for="gridRadios1">
+											Gotówka
+										  </label>
+										</div>
+										<div class="form-check">
+										  <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="optionKartaPlatnicza">
+										  <label class="form-check-label" for="gridRadios2">
+											Karta Płatnicza
+										  </label>
+										</div>
+										<div class="form-check">
+										  <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="OptionKartaDebetowa">
+										  <label class="form-check-label" for="gridRadios3">
+											Karta Debetowa
+										  </label>
+										</div>
+						  </div>
+						  <div class="form-group">
+							<label for="kategoriaInput">Kategoria:</label>
+							<select multiple class="form-control" name="kategoriaInput" id="kategoriaInput">
+								<?php
+								foreach ($exp_cat_names as $exp_cat_name){
+								echo "<option value=\"".$exp_cat_name."\" >$exp_cat_name </option>";
+								}
+								?>
+							</select>
+						  </div>
+						  <div class="form-group">
+							<label for="komentarzInput">Komentarz:</label>
+							<textarea class="form-control" name="komentarzInput" id="komentarzInput" rows="3"></textarea>
+						  </div>						
 					  </div>
-					  <div class="form-group">
-						<label for="datePicker">Data:</label>
-						<input type="date" class="form-control" id="datePicker" placeholder="dd-mm-yyyy">
-						<script>TodayDate();</script>
-					  </div>
-					  <div class="form-group">
-							 <label for="radios">Forma płatności:</label>
-									<div class="form-check">
-									  <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="optionGotowka" checked>
-									  <label class="form-check-label" for="gridRadios1">
-										Gotówka
-									  </label>
-									</div>
-									<div class="form-check">
-									  <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="optionKartaPlatnicza">
-									  <label class="form-check-label" for="gridRadios2">
-										Karta Płatnicza
-									  </label>
-									</div>
-									<div class="form-check">
-									  <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="OptionKartaDebetowa">
-									  <label class="form-check-label" for="gridRadios3">
-										Karta Debetowa
-									  </label>
-									</div>
-
-					  </div>
-					  <div class="form-group">
-						<label for="kategoriaInput">Kategoria:</label>
-						<select multiple class="form-control" id="kategoriaInput">
-							<?php
-							foreach ($exp_cat_names as $exp_cat_name){
-							echo "<option value=\"".$exp_cat_name."\" >$exp_cat_name </option>";
-							}
-							?>
-						</select>
-					  </div>
-					  <div class="form-group">
-						<label for="komentarzInput">Komentarz:</label>
-						<textarea class="form-control" id="komentarzInput" rows="3"></textarea>
+					  <div class="modal-footer d-flex justify-content-center">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+						<button type="submit" class="btn btn-primary">Dodaj</button>
 					  </div>
 					</form>
-				  </div>
-				  <div class="modal-footer d-flex justify-content-center">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
-					<button type="button" class="btn btn-primary">Dodaj</button>
-				  </div>
 				</div>
 			  </div>
 			</div>
