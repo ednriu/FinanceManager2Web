@@ -1,6 +1,7 @@
 <?php
 	session_start();
 	error_reporting(E_ALL);
+	
 	require_once "connect.php";
 	$polaczenie = @new mysqli($host, $db_user, $db_password, $db_name);
 	
@@ -25,17 +26,28 @@
 			//Add newest 'cat_name' to the array
 			$inc_cat_names[] = $categories_list['cat_name'];
 		}
-		
-		
+				
 		//przetwarzanie formularza dodawania wydatków
 		if (isset($_POST['expenceAmmount']))
 		{
-
+			$wszystko_OK = true;
 			$expenceAmmount = $_POST['expenceAmmount'];
-			$expenceDate = $_POST['expenceDatePicker']; 
-			$expenceCategory = $_POST['kategoriaInput']; 
+			if ($expenceAmmount==0){
+				$wszystko_OK = false;
+				$_SESSION['e_expenceAmmount'] = 'wpisz liczbę różną od 0';
+			}
+			$expenceDate = $_POST['expenceDatePicker'];
+			if ($expenceDate==NULL){
+				$wszystko_OK = false;
+				$_SESSION['e_expenceDate'] = 'nie wybrano daty';
+			}			
+			$expenceCategory = $_POST['kategoriaInput'];
+			if ($expenceCategory==NULL){
+				$wszystko_OK = false;
+				$_SESSION['e_expenceCategory'] = 'nie wybrano kategorii';
+			}				
+			$expenceComment = $_POST['komentarzInput'];			
 			$userId = $_SESSION['id'];
-			$expenceComment = $_POST['komentarzInput'];
 			
 			//pobieranie numeru kategorii wydatków
 			$exp_cat = $polaczenie->query("SELECT cat_id FROM expence_categories WHERE cat_name='$expenceCategory'");
@@ -46,13 +58,17 @@
 
 			$sql = "INSERT INTO `expences` (`date`, `ammount`, `category_id`, `user_id`, `comment`) VALUES (STR_TO_DATE('$expenceDate', '%Y-%m-%d'),".$expenceAmmount.",'$expenceCategoryId','$userId','$expenceComment')";
 			
-			if(mysqli_query($polaczenie, $sql)){
-				//sukces
-			} else{
-				//porażka
-				echo "ERROR: Could not able to execute $sql. " . mysqli_error($polaczenie);
+			if ($wszystko_OK)
+			{
+				if(mysqli_query($polaczenie, $sql)){
+				 $_SESSION['dodano_wydatek'] = true;
+				 unset($_POST['expenceAmmount']);
+				} else{
+					//porażka
+					echo "ERROR: Could not able to execute $sql. " . mysqli_error($polaczenie);
+				}
 			}
-		}
+		}		
 	}
 	
 ?>
@@ -185,26 +201,33 @@
 	<!--Right Panel-->
 		<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4 pt-lg-3 pt-md-5">
 		
-		<div class="row d-flex justify-content-center mt-3">
-			<div class="col-lg-3 col-sm-3 d-flex justify-content-center">
-				<div class="info-box">
-					<h1 class="text-center py-1">Suma Wpływów</h1>
-						<div class="row justify-content-center mt-4"><span data-feather="plus-square"></span> <p class="balance font-weight-bold">120zł</p></div>
+			<?php
+				if (isset($_SESSION['dodano_wydatek']) && $_SESSION['dodano_wydatek']){
+					echo '<div class="row d-flex justify-content-center mt-3"><div class="alert alert-success" role="alert">Twój wydatek został dodany!</div></div>';
+					unset($_SESSION['dodano_wydatek']);
+				};				
+			?>
+			
+			<div class="row d-flex justify-content-center mt-3">
+				<div class="col-lg-3 col-sm-3 d-flex justify-content-center">
+					<div class="info-box">
+						<h1 class="text-center py-1">Suma Wpływów</h1>
+							<div class="row justify-content-center mt-4"><span data-feather="plus-square"></span> <p class="balance font-weight-bold">120zł</p></div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-sm-3 d-flex justify-content-center">
+					<div class="info-box balance">
+						<h1 class="text-center py-1">Bilans</h1>
+						<div class="row justify-content-center mt-4"><span data-feather="info"></span> <p class="balance font-weight-bold">145zł</p></div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-sm-3 d-flex justify-content-center">
+					<div class="info-box">
+						<h1 class="text-center py-1">Suma Wydatków</h1>
+						<div class="row justify-content-center mt-4"><span data-feather="minus-square"></span> <p class="balance font-weight-bold">180zł</p></div>
+					</div>
 				</div>
 			</div>
-			<div class="col-lg-3 col-sm-3 d-flex justify-content-center">
-				<div class="info-box balance">
-					<h1 class="text-center py-1">Bilans</h1>
-					<div class="row justify-content-center mt-4"><span data-feather="info"></span> <p class="balance font-weight-bold">145zł</p></div>
-				</div>
-			</div>
-			<div class="col-lg-3 col-sm-3 d-flex justify-content-center">
-				<div class="info-box">
-					<h1 class="text-center py-1">Suma Wydatków</h1>
-					<div class="row justify-content-center mt-4"><span data-feather="minus-square"></span> <p class="balance font-weight-bold">180zł</p></div>
-				</div>
-			</div>
-		</div>
 
 		<div class="row mt-3">
 			<div class="col-lg-6">
@@ -223,75 +246,38 @@
 							</tr>
 						  </thead>
 						  <tbody>
-							<tr>
-							  <td>1</td>
-							  <td>22.05.2020</td>
-							  <td>15</td>
-							  <td>odsetki</td>
-							  <td></td>
-							  <td><a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-									<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>
-							  </tr>
-							<tr>
-							  <td>2</td>
-							  <td>22.05.2020</td>
-							  <td>16</td>
-							  <td>praca</td>
-							  <td></td>
-							  <td><a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-									<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>
-							  </tr>
-							</tr>
-							<tr>
-							  <td>3</td>
-							  <td>22.05.2020</td>
-							  <td>17</td>
-							  <td>programowanie</td>
-							  <td>wymiana oleju</td>
-							  <td><a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-									<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>
-							  </tr>
-							</tr>
-							<tr>
-							  <td>4</td>
-							  <td>22.05.2020</td>
-							  <td>15</td>
-							  <td>odsetki</td>
-							  <td></td>
-							  <td><a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-									<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>
-							  </tr>
-							</tr>
-							<tr>
-							  <td>5</td>
-							  <td>22.05.2020</td>
-							  <td>16</td>
-							  <td>praca</td>
-							  <td></td>
-							  <td><a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-									<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>
-							  </tr>
-							</tr>
-							<tr>
-							  <td>6</td>
-							  <td>22.05.2020</td>
-							  <td>17</td>
-							  <td>programowanie</td>
-							  <td>wymiana oleju</td>
-							  <td><a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-									<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>
-							  </tr>
-							</tr>						
+							<?php
+								if ($polaczenie->connect_errno!=0)
+								{
+									echo "Error: ".$polaczenie->connect_errno;
+								}
+								else
+								{
+									$wydatki = $polaczenie->query("SELECT `expence_id`, `date`, `ammount`, `category_id`, `comment` FROM `expences` WHERE user_id='$userId'");
+									$liczba_porzadkowa = 1;
+									while ($wiersz_wydatkow = $wydatki->fetch_assoc()){
+										echo '<tr>';
+										  echo '<td>'.$liczba_porzadkowa.'</td>';
+										  echo '<td>'.$wiersz_wydatkow['date'].'</td>';
+										  echo '<td>'.$wiersz_wydatkow['ammount'].'</td>';
+										  echo '<td>'.$wiersz_wydatkow['category_id'].'</td>';
+										  echo '<td>'.$wiersz_wydatkow['comment'].'</td>';
+										  echo '<td><a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+												<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>';
+										echo '</tr>';
+										$liczba_porzadkowa=$liczba_porzadkowa+1;
+									};
+								};
+							?>							
 						  </tbody>
 						</table>
 					</div>
 				  </div>
 				<div class="wykres">
 					<canvas id="pieChart_wplywy"></canvas>
-				</div>
-
-				  
+				</div>				  
 			</div>
+			
 			<div class="col-lg-6">
 				  <div class="table-responsive inc-exp-area mt-3">
 				  	<h1 class="d-flex justify-content-center pb-2">Wpływy</h1>
@@ -403,11 +389,17 @@
 					</button>
 				  </div>
 				  <form method="post" id="add_expence">
-					  <div class="modal-body">
-						
+					  <div class="modal-body">						
 						  <div class="form-group">
 							<label for="kwotaInput">Kwota:</label>
 							<input type="number" min="0" step="0.01" data-number-to-fixed="2" data-number-stepfactor="100" class="form-control currency" name="expenceAmmount" id="expenceAmmount" />
+								<?php
+									if (isset($_SESSION['e_expenceAmmount']))
+									{											
+										echo '<div class="alert alert-warning mt-1" role="alert"><small>'.$_SESSION['e_expenceAmmount'].'</small></div>';
+										unset($_SESSION['e_expenceAmmount']);
+									}
+								?>		
 						  </div>
 						  <div class="form-group">
 							<label for="expenceDatePicker">Data:</label>
@@ -488,8 +480,7 @@
 				  </div>
 				</div>
 			  </div>
-			</div>	
-			
+			</div>			
 		</main>
 	</div>
 </div><!-- /.container -->
@@ -505,6 +496,6 @@
 	<script src="bootstrap-4.0.0-dist/js/pieChart_wydatki.js"></script>
 	<script src="bootstrap-4.0.0-dist/js/pieChart_wplywy.js"></script>
 
-
+<?php $polaczenie->close(); ?>
 </body>
 </html>
