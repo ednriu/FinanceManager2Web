@@ -27,7 +27,7 @@
 			$inc_cat_names[] = $categories_list['cat_name'];
 		}
 				
-		//przetwarzanie formularza dodawania wydatków
+//przetwarzanie formularza dodawania wydatków
 		if (isset($_POST['expenceAmmount']))
 		{
 			$wszystko_OK = true;
@@ -41,13 +41,12 @@
 				$wszystko_OK = false;
 				$_SESSION['e_expenceDate'] = 'nie wybrano daty';
 			}			
-			$expenceCategory = $_POST['kategoriaInput'];
+			$expenceCategory = $_POST['kategoriaExpInput'];
 			if ($expenceCategory==NULL){
 				$wszystko_OK = false;
 				$_SESSION['e_expenceCategory'] = 'nie wybrano kategorii';
 			}				
 			$expenceComment = $_POST['komentarzInput'];			
-			$userId = $_SESSION['id'];
 			
 			//pobieranie numeru kategorii wydatków
 			$exp_cat = $polaczenie->query("SELECT cat_id FROM expence_categories WHERE cat_name='$expenceCategory'");
@@ -56,13 +55,55 @@
 				$expenceCategoryId = $categories_list['cat_id'];
 			}		
 
-			$sql = "INSERT INTO `expences` (`date`, `ammount`, `category_id`, `user_id`, `comment`) VALUES (STR_TO_DATE('$expenceDate', '%Y-%m-%d'),".$expenceAmmount.",'$expenceCategoryId','$userId','$expenceComment')";
+			$sql = "INSERT INTO `expences` (`date`, `ammount`, `category_id`, `user_id`, `comment`) VALUES (STR_TO_DATE('$expenceDate', '%Y-%m-%d'),".$expenceAmmount.",'$expenceCategoryId',".$_SESSION['id'].",'$expenceComment')";
 			
 			if ($wszystko_OK)
 			{
 				if(mysqli_query($polaczenie, $sql)){
 				 $_SESSION['dodano_wydatek'] = true;
 				 unset($_POST['expenceAmmount']);
+				} else{
+					//porażka
+					echo "ERROR: Could not able to execute $sql. " . mysqli_error($polaczenie);
+				}
+			}
+		}
+
+//przetwarzanie formularza dodawania wpływów
+		if (isset($_POST['incomeAmmount']))
+		{
+			$wszystko_OK = true;
+			$incomeAmmount = $_POST['incomeAmmount'];
+			if ($incomeAmmount==0){
+				$wszystko_OK = false;
+				$_SESSION['e_incomeAmmount'] = 'wpisz liczbę różną od 0';
+			}
+			$incomeDate = $_POST['incomeDatePicker'];
+			if ($incomeDate==NULL){
+				$wszystko_OK = false;
+				$_SESSION['e_incomeDate'] = 'nie wybrano daty';
+			}			
+			$incomeCategory = $_POST['kategoriaIncInput'];
+			if ($incomeCategory==NULL){
+				$wszystko_OK = false;
+				$_SESSION['e_incomeCategory'] = 'nie wybrano kategorii';
+			}				
+			$incomeComment = $_POST['komentarzIncInput'];			
+			
+			//pobieranie numeru kategorii wydatków
+			$inc_cat = $polaczenie->query("SELECT cat_id FROM income_categories WHERE cat_name='$incomeCategory'");
+			if ($categories_list = $inc_cat->fetch_assoc()) {
+				//Add newest 'cat_name' to the array
+				$incomeCategoryId = $categories_list['cat_id'];
+			}		
+
+			$sql = "INSERT INTO `incomes` (`date`, `ammount`, `category_id`, `user_id`, `comment`) VALUES (STR_TO_DATE('$incomeDate', '%Y-%m-%d'),".$incomeAmmount.",'$incomeCategoryId',".$_SESSION['id'].",'$incomeComment')";
+			
+			if ($wszystko_OK)
+			{
+				if(mysqli_query($polaczenie, $sql)){
+				 $_SESSION['dodano_wpływ'] = true;
+				 unset($_POST['incomeAmmount']);
 				} else{
 					//porażka
 					echo "ERROR: Could not able to execute $sql. " . mysqli_error($polaczenie);
@@ -209,8 +250,9 @@
 			?>
 			
 			<div class="row d-flex justify-content-center mt-3">
+			<div class="row d-flex justify-content-center mt-3">
 				<div class="col-lg-3 col-sm-3 d-flex justify-content-center">
-					<div class="info-box">
+					<div class="info-box">			
 						<h1 class="text-center py-1">Suma Wpływów</h1>
 							<div class="row justify-content-center mt-4"><span data-feather="plus-square"></span> <p class="balance font-weight-bold">120zł</p></div>
 					</div>
@@ -252,21 +294,29 @@
 									echo "Error: ".$polaczenie->connect_errno;
 								}
 								else
-								{
-									$wydatki = $polaczenie->query("SELECT `expence_id`, `date`, `ammount`, `category_id`, `comment` FROM `expences` WHERE user_id='$userId'");
-									$liczba_porzadkowa = 1;
-									while ($wiersz_wydatkow = $wydatki->fetch_assoc()){
-										echo '<tr>';
-										  echo '<td>'.$liczba_porzadkowa.'</td>';
-										  echo '<td>'.$wiersz_wydatkow['date'].'</td>';
-										  echo '<td>'.$wiersz_wydatkow['ammount'].'</td>';
-										  echo '<td>'.$wiersz_wydatkow['category_id'].'</td>';
-										  echo '<td>'.$wiersz_wydatkow['comment'].'</td>';
-										  echo '<td><a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-												<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>';
-										echo '</tr>';
-										$liczba_porzadkowa=$liczba_porzadkowa+1;
-									};
+								{	
+									$wydatki = $polaczenie->query("SELECT expences.expence_id, expences.date, expences.ammount,expences.category_id,users.user_id,expences.comment, expence_categories.cat_name 
+									FROM 
+										`expences`,
+										`expence_categories`,
+										`users`
+									WHERE users.user_id = ".$_SESSION['id']."
+										AND expences.user_id = users.user_id
+										AND expences.category_id = expence_categories.cat_id");
+										$liczba_porzadkowa = 1;
+										while ($wiersz_wydatkow = $wydatki->fetch_assoc())
+										{
+											echo '<tr>';
+											  echo '<td>'.$liczba_porzadkowa.'</td>';
+											  echo '<td>'.$wiersz_wydatkow['date'].'</td>';
+											  echo '<td>'.$wiersz_wydatkow['ammount'].'</td>';
+											  echo '<td>'.$wiersz_wydatkow['category_id'].'</td>';
+											  echo '<td>'.$wiersz_wydatkow['comment'].'</td>';
+											  echo '<td><a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+													<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>';
+											echo '</tr>';
+											$liczba_porzadkowa=$liczba_porzadkowa+1;
+										}
 								};
 							?>							
 						  </tbody>
@@ -294,33 +344,37 @@
 							</tr>
 						  </thead>
 						  <tbody>
-							<tr>
-							  <td>1</td>
-							  <td>22.05.2020</td>
-							  <td>15</td>
-							  <td>odsetki</td>
-							  <td></td>
-							  <td><a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-									<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>
-							</tr>
-							<tr>
-							  <td>1</td>
-							  <td>22.05.2020</td>
-							  <td>16</td>
-							  <td>praca</td>
-							  <td></td>
-							  <td><a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-									<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>
-							</tr>
-							<tr>
-							  <td>1</td>
-							  <td>22.05.2020</td>
-							  <td>17</td>
-							  <td>programowanie</td>
-							  <td>wymiana oleju</td>
-							  <td><a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-									<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>
-							</tr>						
+							<?php
+								if ($polaczenie->connect_errno!=0)
+								{
+									echo "Error: ".$polaczenie->connect_errno;
+								}
+								else
+								{	
+									$wplywy = $polaczenie->query("SELECT incomes.income_id, incomes.date, incomes.ammount,incomes.category_id,users.user_id,incomes.comment, income_categories.cat_name 
+									FROM 
+										`incomes`,
+										`income_categories`,
+										`users`
+									WHERE users.user_id = ".$_SESSION['id']."
+										AND incomes.user_id = users.user_id
+										AND incomes.category_id = income_categories.cat_id");
+										$liczba_porzadkowa = 1;
+										while ($wiersz_wplywow = $wplywy->fetch_assoc())
+										{
+											echo '<tr>';
+											  echo '<td>'.$liczba_porzadkowa.'</td>';
+											  echo '<td>'.$wiersz_wplywow['date'].'</td>';
+											  echo '<td>'.$wiersz_wplywow['ammount'].'</td>';
+											  echo '<td>'.$wiersz_wplywow['category_id'].'</td>';
+											  echo '<td>'.$wiersz_wplywow['comment'].'</td>';
+											  echo '<td><a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+													<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>';
+											echo '</tr>';
+											$liczba_porzadkowa=$liczba_porzadkowa+1;
+										}
+								};
+							?>						
 						  </tbody>
 						</table>
 					</div>
@@ -343,37 +397,44 @@
 					  <span aria-hidden="true">&times;</span>
 					</button>
 				  </div>
-				  <div class="modal-body">
-					<form>
-					  <div class="form-group">
-							<label for="kwotaInput">Kwota:</label>
-							<input type="number" min="0" step="0.01" data-number-to-fixed="2" data-number-stepfactor="100" class="form-control currency" id="incomeAmmount" />
+					<form method="post" id="add_income">
+						<div class="modal-body">
+						  <div class="form-group">
+								<label for="kwotaInput">Kwota:</label>
+								<input type="number" min="0" step="0.01" data-number-to-fixed="2" data-number-stepfactor="100" class="form-control currency" name="incomeAmmount" id="incomeAmmount"/>
+								<?php
+										if (isset($_SESSION['e_incomeAmmount']))
+										{											
+											echo '<div class="alert alert-warning mt-1" role="alert"><small>'.$_SESSION['e_incomeAmmount'].'</small></div>';
+											unset($_SESSION['e_incomeAmmount']);
+										}
+								?>	
+						  </div>
+						  <div class="form-group">
+							<label for="incomeDatePicker">Data:</label>
+							<input type="date" class="form-control" name="incomeDatePicker" id="incomeDatePicker" placeholder="dd-mm-yyyy">
+							<script>TodayDate();</script>
+						  </div>
+						  <div class="form-group">
+							<label for="kategoriaInput">Kategoria:</label>
+							<select multiple class="form-control" name="kategoriaIncInput" id="kategoriaIncome">						
+								<?php
+									foreach ($inc_cat_names as $inc_cat_name){
+									echo "<option value=\"".$inc_cat_name."\" >$inc_cat_name </option>";
+									}
+								?>
+							</select>
+						  </div>
+						  <div class="form-group">
+							<label for="komentarzInput">Komentarz:</label>
+							<textarea class="form-control" name="komentarzIncInput" id="komentarzInput" rows="3"></textarea>
+						  </div>						
 					  </div>
-					  <div class="form-group">
-						<label for="incomeDatePicker">Data:</label>
-						<input type="date" class="form-control" id="incomeDatePicker" placeholder="dd-mm-yyyy">
-						<script>TodayDate();</script>
+					  <div class="modal-footer d-flex justify-content-center">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+						<button type="submit" class="btn btn-primary">Dodaj</button>
 					  </div>
-					  <div class="form-group">
-						<label for="kategoriaInput">Kategoria:</label>
-						<select multiple class="form-control" name="kategoriaIncome" id="kategoriaIncome">						
-							<?php
-								foreach ($inc_cat_names as $inc_cat_name){
-								echo "<option value=\"".$inc_cat_name."\" >$inc_cat_name </option>";
-								}
-							?>
-						</select>
-					  </div>
-					  <div class="form-group">
-						<label for="komentarzInput">Komentarz:</label>
-						<textarea class="form-control" id="komentarzInput" rows="3"></textarea>
-					  </div>
-					</form>
-				  </div>
-				  <div class="modal-footer d-flex justify-content-center">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
-					<button type="button" class="btn btn-primary">Dodaj</button>
-				  </div>
+				  </form>
 				</div>
 			  </div>
 			</div>
@@ -383,7 +444,7 @@
 			  <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
 				<div class="modal-content">
 				  <div class="modal-header">
-					<h5 class="modal-title" id="modalIncomeTitle">Dodaj Wydatek</h5>
+					<h5 class="modal-title" id="modalExpenceTitle">Dodaj Wydatek</h5>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					  <span aria-hidden="true">&times;</span>
 					</button>
@@ -403,7 +464,7 @@
 						  </div>
 						  <div class="form-group">
 							<label for="expenceDatePicker">Data:</label>
-							<input type="date" class="form-control" name="expenceDatePicker" id="expenceDatePicker" placeholder="yyyy-mm-dd">
+							<input type="date" class="form-control" name="expenceDatePicker" id="expenceDatePicker" placeholder="dd-mm-yyyy">
 							<script>TodayDate();</script>
 						  </div>
 						  <div class="form-group">
@@ -429,7 +490,7 @@
 						  </div>
 						  <div class="form-group">
 							<label for="kategoriaInput">Kategoria:</label>
-							<select multiple class="form-control" name="kategoriaInput" id="kategoriaInput">
+							<select multiple class="form-control" name="kategoriaExpInput" id="kategoriaInput">
 								<?php
 								foreach ($exp_cat_names as $exp_cat_name){
 								echo "<option value=\"".$exp_cat_name."\" >$exp_cat_name </option>";
