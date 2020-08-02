@@ -310,7 +310,7 @@
 											  echo '<td>'.$liczba_porzadkowa.'</td>';
 											  echo '<td>'.$wiersz_wydatkow['date'].'</td>';
 											  echo '<td>'.$wiersz_wydatkow['ammount'].'</td>';
-											  echo '<td>'.$wiersz_wydatkow['category_id'].'</td>';
+											  echo '<td>'.$wiersz_wydatkow['cat_name'].'</td>';
 											  echo '<td>'.$wiersz_wydatkow['comment'].'</td>';
 											  echo '<td><a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
 													<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>';
@@ -366,7 +366,7 @@
 											  echo '<td>'.$liczba_porzadkowa.'</td>';
 											  echo '<td>'.$wiersz_wplywow['date'].'</td>';
 											  echo '<td>'.$wiersz_wplywow['ammount'].'</td>';
-											  echo '<td>'.$wiersz_wplywow['category_id'].'</td>';
+											  echo '<td>'.$wiersz_wplywow['cat_name'].'</td>';
 											  echo '<td>'.$wiersz_wplywow['comment'].'</td>';
 											  echo '<td><a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
 													<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>';
