@@ -2,15 +2,20 @@
 	session_start();
 	error_reporting(E_ALL);
 	
+	
 	require_once "connect.php";
 	$polaczenie = @new mysqli($host, $db_user, $db_password, $db_name);
-	
+ 
+
 	if ($polaczenie->connect_errno!=0)
 	{
 		echo "Error: ".$polaczenie->connect_errno;
 	}
 	else
 	{
+
+		$polaczenie -> set_charset("utf8");
+	
 		//pobieranie kategorii wydatków do wypełnienia pola Select w formularzu
 		$exp_cat = $polaczenie->query('SELECT cat_id,cat_name FROM expence_categories');
 		$exp_cat_names = array();   //array for category names
@@ -117,7 +122,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">

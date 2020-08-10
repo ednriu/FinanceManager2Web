@@ -193,7 +193,10 @@
 
 			
 				<!--Modal Logowanie-->
-				<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal fade <?php
+					if (($_SESSION['blad'] == true) && isset($_SESSION['blad']))
+						echo 'show d-block';
+				?>" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				  <div class="modal-dialog  form-logowanie">
 					<div class="modal-content">					
 						<div class="modal-header">
@@ -202,6 +205,7 @@
 							  <span aria-hidden="true">&times;</span>
 							</button>
 						 </div>
+						 
 						<div class="modal-body logowanie">
 							<form action="zaloguj.php" method="post">
 								<div class="text-center">
