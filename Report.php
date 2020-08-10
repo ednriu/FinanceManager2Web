@@ -45,38 +45,6 @@ $dataPoints = array(
 			$inc_cat_names[] = $categories_list['cat_name'];
 		}
 		
-		//Pobieranie sumy wydatków
-		$suma_wydatkow = $polaczenie->query('SELECT SUM(expences.ammount) as total FROM expences WHERE expences.user_id='.$_SESSION['id']);
-		if ($suma_wydatkow)
-		{
-			$row = $suma_wydatkow->fetch_assoc();
-			$suma_wydatkow = $row['total'];
-			$_SESSION['suma_wydatkow'] = round($suma_wydatkow,2);
-		}
-		else
-		{
-			$_SESSION['suma_wydatkow']=0;
-		}
-		
-		//Pobieranie sumy wplywow
-		$suma_wplywow = $polaczenie->query('SELECT SUM(incomes.ammount) as total FROM expences WHERE incomes.user_id='.$_SESSION['id']);
-		if ($suma_wplywow)
-		{
-			$row = $suma_wplywow->fetch_assoc();
-			$suma_wplywow = $row['total'];
-			$_SESSION['suma_wplywow'] = round($suma_wplywow,2);
-		}
-		else
-		{
-			$_SESSION['suma_wplywow']=0;
-		}
-		
-		//Obliczanie bilansu
-		$_SESSION['bilans'] = $_SESSION['suma_wplywow']-$_SESSION['suma_wydatkow'];
-
-							
-
-				
 //przetwarzanie formularza dodawania wydatków
 		if (isset($_POST['expenceAmmount']))
 		{
@@ -112,6 +80,7 @@ $dataPoints = array(
 				if(mysqli_query($polaczenie, $sql)){
 				 $_SESSION['dodano_wydatek'] = true;
 				 unset($_POST['expenceAmmount']);
+				 header("Location: report.php");
 				} else{
 					//porażka
 					echo "ERROR: Could not able to execute $sql. " . mysqli_error($polaczenie);
@@ -152,14 +121,75 @@ $dataPoints = array(
 			if ($wszystko_OK)
 			{
 				if(mysqli_query($polaczenie, $sql)){
-				 $_SESSION['dodano_wpływ'] = true;
+				 $_SESSION['dodano_wplyw'] = true;
 				 unset($_POST['incomeAmmount']);
+				 header("Location: report.php");
 				} else{
 					//porażka
 					echo "ERROR: Could not able to execute $sql. " . mysqli_error($polaczenie);
 				}
 			}
-		}		
+		}
+		//Pobieranie sumy wydatków
+		$suma_wydatkow = $polaczenie->query('SELECT SUM(expences.ammount) as total FROM expences WHERE expences.user_id='.$_SESSION['id']);
+		if ($suma_wydatkow)
+		{
+			$row = $suma_wydatkow->fetch_assoc();
+			$suma_wydatkow = $row['total'];
+			$_SESSION['suma_wydatkow'] = round($suma_wydatkow,2);
+		}
+		else
+		{
+			$_SESSION['suma_wydatkow']=0;
+		}
+		
+		//Pobieranie sumy wplywow
+		$suma_wplywow = $polaczenie->query('SELECT SUM(incomes.ammount) as total FROM incomes WHERE incomes.user_id='.$_SESSION['id']);
+		if ($suma_wplywow)
+		{
+			$row = $suma_wplywow->fetch_assoc();
+			$suma_wplywow = $row['total'];
+			$_SESSION['suma_wplywow'] = round($suma_wplywow,2);
+		}
+		else
+		{
+			$_SESSION['suma_wplywow']=0;
+		}
+		
+		//Obliczanie bilansu
+		$_SESSION['bilans'] = $_SESSION['suma_wplywow']-$_SESSION['suma_wydatkow'];	
+
+
+
+		//Wypełnianie wykresu wydatków
+		//SELECT SUM(expences.ammount) as total, expences.category_id FROM expences WHERE expences.user_id=104
+		$suma_wydatkow = $polaczenie->query('SELECT SUM(expences.ammount) as total, expences.category_id FROM expences WHERE expences.user_id='.$_SESSION['id']);
+		if ($suma_wydatkow)
+		{
+			$row = $suma_wydatkow->fetch_assoc();
+			$suma_wydatkow = $row['total'];
+			$_SESSION['suma_wydatkow'] = round($suma_wydatkow,2);
+		}
+		else
+		{
+			$_SESSION['suma_wydatkow']=0;
+		}
+		
+		$dataPoints = array( 
+			array("label"=>"Chrome", "y"=>64.02),
+			array("label"=>"Firefox", "y"=>12.55),
+			array("label"=>"IE", "y"=>8.47),
+			array("label"=>"Safari", "y"=>6.08),
+			array("label"=>"Edge", "y"=>4.29),
+			array("label"=>"Others", "y"=>4.59)
+		);
+		//sumawyd=100%
+		//sumakategorii=x
+		//x=sumakategorii*100/sumawyd
+		
+		//array_push($dataPoints,"nazwa kategorii","15");
+
+		
 	}
 	
 ?>
@@ -219,7 +249,8 @@ $dataPoints = array(
 			$(this).parents("tr").remove();
 			$(".add-new").removeAttr("disabled");
 		});
-	</script>	
+	</script>
+	
   </head>
   
   
@@ -312,7 +343,7 @@ $dataPoints = array(
 		
 	<!--Right Panel-->
 		<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4 pt-lg-3 pt-md-5">
-		
+			<!--Komunikat jeśli dodano wydatek-->
 			<?php
 				if (isset($_SESSION['dodano_wydatek']) && $_SESSION['dodano_wydatek']){
 					echo '<div class="row d-flex justify-content-center mt-3"><div class="alert alert-success" role="alert">Twój wydatek został dodany!</div></div>';
@@ -320,17 +351,25 @@ $dataPoints = array(
 				};
 			?>
 			
+			<!--Komunikat jeśli dodano wpływ-->
+			<?php
+				if (isset($_SESSION['dodano_wplyw']) && $_SESSION['dodano_wplyw']){
+					echo '<div class="row d-flex justify-content-center mt-3"><div class="alert alert-success" role="alert">Twój przychód został dodany!</div></div>';
+					unset($_SESSION['dodano_wplyw']);
+				};
+			?>
+			<!--okienka z sumami i bilansem-->
 			<div class="row d-flex justify-content-center mt-3">
 			<div class="row d-flex justify-content-center mt-3">
 				<div class="col-lg-3 col-sm-3 d-flex justify-content-center">
 					<div class="info-box">			
-						<h1 class="text-center py-1">Suma Wpływów</h1>
+						<h1 class="text-center py-1">Suma Wpływów</h1>							
 							<div class="row justify-content-center mt-4"><span data-feather="plus-square"></span> <p class="balance font-weight-bold">
 								<?php 
-									echo $_SESSION['suma_wplywow'].'zł';
-									unset($_SESSION['suma_wplywow']);
+									echo $_SESSION['suma_wydatkow'].'zł';
+									unset($_SESSION['suma_wydatkow']);
 								?>
-							</p></div>				
+							</p></div>							
 					</div>
 				</div>
 				<div class="col-lg-3 col-sm-3 d-flex justify-content-center">
@@ -346,17 +385,17 @@ $dataPoints = array(
 				</div>
 				<div class="col-lg-3 col-sm-3 d-flex justify-content-center">
 					<div class="info-box">
-						<h1 class="text-center py-1">Suma Wydatków</h1>
-							<div class="row justify-content-center mt-4"><span data-feather="plus-square"></span> <p class="balance font-weight-bold">
+						<h1 class="text-center py-1">Suma Przychodów</h1>
+						<div class="row justify-content-center mt-4"><span data-feather="plus-square"></span> <p class="balance font-weight-bold">
 								<?php 
-									echo $_SESSION['suma_wydatkow'].'zł';
-									unset($_SESSION['suma_wydatkow']);
+									echo $_SESSION['suma_wplywow'].'zł';
+									unset($_SESSION['suma_wplywow']);
 								?>
-							</p></div>
+						</p></div>	
 					</div>
 				</div>
 			</div>
-
+		<!--Tabela wydatków-->
 		<div class="row mt-3">
 			<div class="col-lg-6">
 				  <div class="table-responsive inc-exp-area mt-3">
@@ -414,10 +453,10 @@ $dataPoints = array(
 					<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 				</div>				  
 			</div>
-			
+			<!--Tabela przychodów-->
 			<div class="col-lg-6">
 				  <div class="table-responsive inc-exp-area mt-3">
-				  	<h1 class="d-flex justify-content-center pb-2">Wpływy</h1>
+				  	<h1 class="d-flex justify-content-center pb-2">Przychody</h1>
 					<div class="table-scrolling">
 						<table id="table-incomes" class="table table-striped table-sm table-bordered text-secondary table-light">
 						  <thead class="thead-dark">
