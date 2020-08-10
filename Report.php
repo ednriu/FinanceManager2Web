@@ -1,4 +1,17 @@
 <?php
+ 
+$dataPoints = array( 
+	array("label"=>"Chrome", "y"=>64.02),
+	array("label"=>"Firefox", "y"=>12.55),
+	array("label"=>"IE", "y"=>8.47),
+	array("label"=>"Safari", "y"=>6.08),
+	array("label"=>"Edge", "y"=>4.29),
+	array("label"=>"Others", "y"=>4.59)
+)
+ 
+?>
+
+<?php
 	session_start();
 	error_reporting(E_ALL);
 	
@@ -31,6 +44,38 @@
 			//Add newest 'cat_name' to the array
 			$inc_cat_names[] = $categories_list['cat_name'];
 		}
+		
+		//Pobieranie sumy wydatków
+		$suma_wydatkow = $polaczenie->query('SELECT SUM(expences.ammount) as total FROM expences WHERE expences.user_id='.$_SESSION['id']);
+		if ($suma_wydatkow)
+		{
+			$row = $suma_wydatkow->fetch_assoc();
+			$suma_wydatkow = $row['total'];
+			$_SESSION['suma_wydatkow'] = round($suma_wydatkow,2);
+		}
+		else
+		{
+			$_SESSION['suma_wydatkow']=0;
+		}
+		
+		//Pobieranie sumy wplywow
+		$suma_wplywow = $polaczenie->query('SELECT SUM(incomes.ammount) as total FROM expences WHERE incomes.user_id='.$_SESSION['id']);
+		if ($suma_wplywow)
+		{
+			$row = $suma_wplywow->fetch_assoc();
+			$suma_wplywow = $row['total'];
+			$_SESSION['suma_wplywow'] = round($suma_wplywow,2);
+		}
+		else
+		{
+			$_SESSION['suma_wplywow']=0;
+		}
+		
+		//Obliczanie bilansu
+		$_SESSION['bilans'] = $_SESSION['suma_wplywow']-$_SESSION['suma_wydatkow'];
+
+							
+
 				
 //przetwarzanie formularza dodawania wydatków
 		if (isset($_POST['expenceAmmount']))
@@ -136,8 +181,29 @@
 	<link href="bootstrap-4.0.0-dist/css/bootstrap.css" rel="stylesheet">
 	<link href="report_global.css" rel="stylesheet">
 	<link href="bootstrap-4.0.0-dist/css/dashboard.css" rel="stylesheet">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-	
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">	
+	<script>
+		window.onload = function() { 
+		 
+			var chart = new CanvasJS.Chart("chartContainer", {
+				animationEnabled: true,
+				title: {
+					text: "Podsumowanie Wydatków"
+				},
+				subtitles: [{
+					text: "Cały okres"
+				}],
+				data: [{
+					type: "pie",
+					yValueFormatString: "#,##0.00\"%\"",
+					indexLabel: "{label} ({y})",
+					dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
+				}]
+			});
+			chart.render();
+		 
+		}
+	</script>
 	<script type="text/javascript" src="scr_wydatki_przychody.js"></script>
 	<script>
 			// Edit row on edit button click
@@ -153,7 +219,7 @@
 			$(this).parents("tr").remove();
 			$(".add-new").removeAttr("disabled");
 		});
-	</script>
+	</script>	
   </head>
   
   
@@ -192,8 +258,8 @@
   </div>
 </nav>
 <!-- END top nawigation bar-->
-<!-- Finance Manager Content-->
 
+<!-- Finance Manager Content-->
 <div class="container-fluid bg">
 
 	<div class="row position-relative">
@@ -251,7 +317,7 @@
 				if (isset($_SESSION['dodano_wydatek']) && $_SESSION['dodano_wydatek']){
 					echo '<div class="row d-flex justify-content-center mt-3"><div class="alert alert-success" role="alert">Twój wydatek został dodany!</div></div>';
 					unset($_SESSION['dodano_wydatek']);
-				};				
+				};
 			?>
 			
 			<div class="row d-flex justify-content-center mt-3">
@@ -259,19 +325,34 @@
 				<div class="col-lg-3 col-sm-3 d-flex justify-content-center">
 					<div class="info-box">			
 						<h1 class="text-center py-1">Suma Wpływów</h1>
-							<div class="row justify-content-center mt-4"><span data-feather="plus-square"></span> <p class="balance font-weight-bold">120zł</p></div>
+							<div class="row justify-content-center mt-4"><span data-feather="plus-square"></span> <p class="balance font-weight-bold">
+								<?php 
+									echo $_SESSION['suma_wplywow'].'zł';
+									unset($_SESSION['suma_wplywow']);
+								?>
+							</p></div>				
 					</div>
 				</div>
 				<div class="col-lg-3 col-sm-3 d-flex justify-content-center">
 					<div class="info-box balance">
 						<h1 class="text-center py-1">Bilans</h1>
-						<div class="row justify-content-center mt-4"><span data-feather="info"></span> <p class="balance font-weight-bold">145zł</p></div>
+							<div class="row justify-content-center mt-4"><span data-feather="info"></span> <p class="balance font-weight-bold">
+								<?php 
+									echo $_SESSION['bilans'].'zł';
+									unset($_SESSION['bilans']);
+								?>
+							</p></div>
 					</div>
 				</div>
 				<div class="col-lg-3 col-sm-3 d-flex justify-content-center">
 					<div class="info-box">
 						<h1 class="text-center py-1">Suma Wydatków</h1>
-						<div class="row justify-content-center mt-4"><span data-feather="minus-square"></span> <p class="balance font-weight-bold">180zł</p></div>
+							<div class="row justify-content-center mt-4"><span data-feather="plus-square"></span> <p class="balance font-weight-bold">
+								<?php 
+									echo $_SESSION['suma_wydatkow'].'zł';
+									unset($_SESSION['suma_wydatkow']);
+								?>
+							</p></div>
 					</div>
 				</div>
 			</div>
@@ -329,7 +410,8 @@
 					</div>
 				  </div>
 				<div class="wykres">
-					<canvas id="pieChart_wplywy"></canvas>
+					<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+					<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 				</div>				  
 			</div>
 			
@@ -377,7 +459,8 @@
 													<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>';
 											echo '</tr>';
 											$liczba_porzadkowa=$liczba_porzadkowa+1;
-										}
+										}										
+									
 								};
 							?>						
 						  </tbody>
@@ -443,6 +526,7 @@
 				</div>
 			  </div>
 			</div>
+			<!-- End Modal Add INCOME -->
 			
 			<!-- Modal Add EXPENSE -->
 			<div class="modal fade  bd-example-modal-sm" id="modalExpense" tabindex="-1" role="dialog" aria-labelledby="modalExpense" aria-hidden="true">
@@ -516,6 +600,7 @@
 				</div>
 			  </div>
 			</div>
+			<!--End  Modal Add EXPENSE -->
 			
 			<!--MODAL Another Range of Date -->
 			<div class="modal fade  modalAnotherRangeOfDate" id="modalAnotherRangeOfDate" tabindex="-1" role="dialog" aria-labelledby="modalAnotherRangeOfDate" aria-hidden="true">
@@ -546,7 +631,9 @@
 				  </div>
 				</div>
 			  </div>
-			</div>			
+			</div>
+			<!--End MODAL Another Range of Date -->
+			
 		</main>
 	</div>
 </div><!-- /.container -->
