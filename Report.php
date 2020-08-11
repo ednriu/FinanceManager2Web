@@ -1,17 +1,4 @@
 <?php
- 
-$dataPoints = array( 
-	array("label"=>"Chrome", "y"=>64.02),
-	array("label"=>"Firefox", "y"=>12.55),
-	array("label"=>"IE", "y"=>8.47),
-	array("label"=>"Safari", "y"=>6.08),
-	array("label"=>"Edge", "y"=>4.29),
-	array("label"=>"Others", "y"=>4.59)
-)
- 
-?>
-
-<?php
 	session_start();
 	error_reporting(E_ALL);
 	
@@ -158,36 +145,38 @@ $dataPoints = array(
 		
 		//Obliczanie bilansu
 		$_SESSION['bilans'] = $_SESSION['suma_wplywow']-$_SESSION['suma_wydatkow'];	
-
-
-
-		//Wypełnianie wykresu wydatków
-		//SELECT SUM(expences.ammount) as total, expences.category_id FROM expences WHERE expences.user_id=104
-		$suma_wydatkow = $polaczenie->query('SELECT SUM(expences.ammount) as total, expences.category_id FROM expences WHERE expences.user_id='.$_SESSION['id']);
-		if ($suma_wydatkow)
-		{
-			$row = $suma_wydatkow->fetch_assoc();
-			$suma_wydatkow = $row['total'];
-			$_SESSION['suma_wydatkow'] = round($suma_wydatkow,2);
-		}
-		else
-		{
-			$_SESSION['suma_wydatkow']=0;
-		}
 		
+
+		
+		//Wylistowanie używanech kategorii wydatków
+		$sql = $polaczenie->query('SELECT expence_categories.cat_name FROM expence_categories, expences WHERE expences.user_id='.$_SESSION['id'].' AND expences.category_id=expence_categories.cat_id');
+		$used_exp_cat_name = array();   //array for category names
+		While ($categories_list = $sql->fetch_assoc()) {
+			//Add newest 'cat_name' to the array
+			$used_exp_cat_name[] = $categories_list['cat_name'];
+		}
+		$user_exp_cat_name_unique = array_unique($used_exp_cat_name);
+		
+		//Wypełnianie wykresu wydatków
 		$dataPoints = array( 
 			array("label"=>"Chrome", "y"=>64.02),
 			array("label"=>"Firefox", "y"=>12.55),
 			array("label"=>"IE", "y"=>8.47),
 			array("label"=>"Safari", "y"=>6.08),
 			array("label"=>"Edge", "y"=>4.29),
-			array("label"=>"Others", "y"=>4.59)
+			
 		);
+		foreach ($user_exp_cat_name_unique as $k => $v) {
+			echo "\$user_exp_cat_name_unique[$k] => $v.\n";
+			$new_array=array("label"=>$v, "y"=>4.59);
+			array_push($dataPoints, $new_array);			
+		}
+		
 		//sumawyd=100%
 		//sumakategorii=x
 		//x=sumakategorii*100/sumawyd
 		
-		//array_push($dataPoints,"nazwa kategorii","15");
+		
 
 		
 	}
