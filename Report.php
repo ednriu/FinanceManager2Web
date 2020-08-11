@@ -159,22 +159,28 @@
 		
 		//Wypełnianie wykresu wydatków
 		$dataPoints = array( 
-			array("label"=>"Chrome", "y"=>64.02),
-			array("label"=>"Firefox", "y"=>12.55),
-			array("label"=>"IE", "y"=>8.47),
-			array("label"=>"Safari", "y"=>6.08),
-			array("label"=>"Edge", "y"=>4.29),
 			
 		);
 		foreach ($user_exp_cat_name_unique as $k => $v) {
-			echo "\$user_exp_cat_name_unique[$k] => $v.\n";
-			$new_array=array("label"=>$v, "y"=>4.59);
-			array_push($dataPoints, $new_array);			
+			echo "ilość: $v";
+			$sql_2 = $polaczenie->query("SELECT SUM(expences.ammount) as total FROM expences, expence_categories WHERE expences.user_id=".$_SESSION['id']."  AND expence_categories.cat_name='$v' AND expence_categories.cat_id=expences.category_id");
+			if ($sql_2)
+			{
+				$row = $sql_2->fetch_assoc();
+				$suma_kategori = $row['total'];
+				$sumaKategoriProcenty=round(($suma_kategori*100)/$_SESSION['suma_wydatkow'],2);
+				echo $sumaKategoriProcenty;
+				$new_array=array("label"=>$v, "y"=>$sumaKategoriProcenty);
+				array_push($dataPoints, $new_array);
+			}
+			else
+			{
+				echo "błąd";
+			}
+						
 		}
 		
-		//sumawyd=100%
-		//sumakategorii=x
-		//x=sumakategorii*100/sumawyd
+		
 		
 		
 
