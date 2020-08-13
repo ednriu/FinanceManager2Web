@@ -150,41 +150,35 @@
 		
 		//Wylistowanie używanech kategorii wydatków
 		$sql = $polaczenie->query('SELECT expence_categories.cat_name FROM expence_categories, expences WHERE expences.user_id='.$_SESSION['id'].' AND expences.category_id=expence_categories.cat_id');
-		$used_exp_cat_name = array();   //array for category names
+		$used_exp_cat_name = array(); 
 		While ($categories_list = $sql->fetch_assoc()) {
-			//Add newest 'cat_name' to the array
 			$used_exp_cat_name[] = $categories_list['cat_name'];
 		}
 		$user_exp_cat_name_unique = array_unique($used_exp_cat_name);
 		
 		//Wypełnianie wykresu wydatków
-		$dataPoints = array( 
-			
-		);
+		$dataPoints = array();
 		foreach ($user_exp_cat_name_unique as $k => $v) {
-			echo "ilość: $v";
 			$sql_2 = $polaczenie->query("SELECT SUM(expences.ammount) as total FROM expences, expence_categories WHERE expences.user_id=".$_SESSION['id']."  AND expence_categories.cat_name='$v' AND expence_categories.cat_id=expences.category_id");
 			if ($sql_2)
 			{
-				$row = $sql_2->fetch_assoc();
+				$row = $sql_2->fetch_assoc();		
 				$suma_kategori = $row['total'];
 				$sumaKategoriProcenty=round(($suma_kategori*100)/$_SESSION['suma_wydatkow'],2);
-				echo $sumaKategoriProcenty;
 				$new_array=array("label"=>$v, "y"=>$sumaKategoriProcenty);
 				array_push($dataPoints, $new_array);
 			}
 			else
 			{
-				echo "błąd";
+				echo "Brak danych lub błąd połączenia z Bazą.";				
 			}
 						
 		}
 		
-		
-		
-		
-
-		
+		$dataPoints2 = array(
+			array("label"=>"fff", "y"=>20),
+			array("label"=>"ggg", "y"=>30)
+		);
 	}
 	
 ?>
@@ -206,29 +200,9 @@
 	<link href="bootstrap-4.0.0-dist/css/bootstrap.css" rel="stylesheet">
 	<link href="report_global.css" rel="stylesheet">
 	<link href="bootstrap-4.0.0-dist/css/dashboard.css" rel="stylesheet">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">	
-	<script>
-		window.onload = function() { 
-		 
-			var chart = new CanvasJS.Chart("chartContainer", {
-				animationEnabled: true,
-				title: {
-					text: "Podsumowanie Wydatków"
-				},
-				subtitles: [{
-					text: "Cały okres"
-				}],
-				data: [{
-					type: "pie",
-					yValueFormatString: "#,##0.00\"%\"",
-					indexLabel: "{label} ({y})",
-					dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
-				}]
-			});
-			chart.render();
-		 
-		}
-	</script>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	
+
 	<script type="text/javascript" src="scr_wydatki_przychody.js"></script>
 	<script>
 			// Edit row on edit button click
@@ -245,7 +219,46 @@
 			$(".add-new").removeAttr("disabled");
 		});
 	</script>
+	<script>
+		window.onload = function rysuj_wykresy_wydatkow_przychodow() {	
+		var chart = new CanvasJS.Chart("chartContainer_wydatki", {
+			animationEnabled: true,
+			title: {
+				text: "Wydatki"
+			},
+			subtitles: [{
+				text: "Cały Okres"
+			}],
+			data: [{
+				type: "pie",
+				yValueFormatString: "#,##0.00\"%\"",
+				indexLabel: "{label} ({y})",
+				dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
+			}]
+		});
+		chart.render();
+		
+		var chart2 = new CanvasJS.Chart("chartContainer_przychody", {
+			animationEnabled: true,
+			title: {
+				text: "Przychody"
+			},
+			subtitles: [{
+				text: "Cały Okres"
+			}],
+			data: [{
+				type: "pie",
+				yValueFormatString: "#,##0.00\"%\"",
+				indexLabel: "{label} ({y})",
+				dataPoints: <?php echo json_encode($dataPoints2, JSON_NUMERIC_CHECK); ?>
+			}]
+		});
+		chart2.render();
+	 
+	};
 	
+
+	</script>
   </head>
   
   
@@ -358,7 +371,7 @@
 			<div class="row d-flex justify-content-center mt-3">
 				<div class="col-lg-3 col-sm-3 d-flex justify-content-center">
 					<div class="info-box">			
-						<h1 class="text-center py-1">Suma Wpływów</h1>							
+						<h1 class="text-center py-1">Suma Wydatków</h1>							
 							<div class="row justify-content-center mt-4"><span data-feather="plus-square"></span> <p class="balance font-weight-bold">
 								<?php 
 									echo $_SESSION['suma_wydatkow'].'zł';
@@ -444,10 +457,11 @@
 					</div>
 				  </div>
 				<div class="wykres">
-					<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+					<div id="chartContainer_wydatki" style="height: 370px; width: 100%;"></div>
 					<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 				</div>				  
 			</div>
+			<!--Koniec Tabeli Wydatków-->
 			<!--Tabela przychodów-->
 			<div class="col-lg-6">
 				  <div class="table-responsive inc-exp-area mt-3">
@@ -503,7 +517,8 @@
 				  </div>
 				  
 					<div class="wykres">
-						<canvas id="pieChart_wydatki"></canvas>	
+						<div id="chartContainer_przychody" style="height: 370px; width: 100%;"></div>
+						<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 					</div>
 
 			</div>
