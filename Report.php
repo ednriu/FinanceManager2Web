@@ -130,43 +130,43 @@
 			$_SESSION['suma_wydatkow']=0;
 		}
 		
-		//Pobieranie sumy wplywow
-		$suma_wplywow = $polaczenie->query('SELECT SUM(incomes.ammount) as total FROM incomes WHERE incomes.user_id='.$_SESSION['id']);
-		if ($suma_wplywow)
+		//Pobieranie sumy przychodow
+		$suma_przychodow = $polaczenie->query('SELECT SUM(incomes.ammount) as total FROM incomes WHERE incomes.user_id='.$_SESSION['id']);
+		if ($suma_przychodow)
 		{
-			$row = $suma_wplywow->fetch_assoc();
-			$suma_wplywow = $row['total'];
-			$_SESSION['suma_wplywow'] = round($suma_wplywow,2);
+			$row = $suma_przychodow->fetch_assoc();
+			$suma_przychodow = $row['total'];
+			$_SESSION['suma_przychodow'] = round($suma_przychodow,2);
 		}
 		else
 		{
-			$_SESSION['suma_wplywow']=0;
+			$_SESSION['suma_przychodow']=0;
 		}
 		
 		//Obliczanie bilansu
-		$_SESSION['bilans'] = $_SESSION['suma_wplywow']-$_SESSION['suma_wydatkow'];	
+		$_SESSION['bilans'] = $_SESSION['suma_przychodow']-$_SESSION['suma_wydatkow'];	
 		
 
-		
+		//-----------------------------------------
 		//Wylistowanie używanech kategorii wydatków
 		$sql = $polaczenie->query('SELECT expence_categories.cat_name FROM expence_categories, expences WHERE expences.user_id='.$_SESSION['id'].' AND expences.category_id=expence_categories.cat_id');
-		$used_exp_cat_name = array(); 
-		While ($categories_list = $sql->fetch_assoc()) {
-			$used_exp_cat_name[] = $categories_list['cat_name'];
+		$KategorieWydatkowNiezerowych = array(); 
+		While ($liniaDanych = $sql->fetch_assoc()) {
+			$KategorieWydatkowNiezerowych[] = $liniaDanych['cat_name'];
 		}
-		$user_exp_cat_name_unique = array_unique($used_exp_cat_name);
+		$unikalneKategorieWydatkowNiezerowych = array_unique($KategorieWydatkowNiezerowych);
 		
 		//Wypełnianie wykresu wydatków
-		$dataPoints = array();
-		foreach ($user_exp_cat_name_unique as $k => $v) {
-			$sql_2 = $polaczenie->query("SELECT SUM(expences.ammount) as total FROM expences, expence_categories WHERE expences.user_id=".$_SESSION['id']."  AND expence_categories.cat_name='$v' AND expence_categories.cat_id=expences.category_id");
+		$daneWykresuWydatkow = array();
+		foreach ($unikalneKategorieWydatkowNiezerowych as $k => $etykietaWydatkow) {
+			$sql_2 = $polaczenie->query("SELECT SUM(expences.ammount) as total FROM expences, expence_categories WHERE expences.user_id=".$_SESSION['id']."  AND expence_categories.cat_name='$etykietaWydatkow' AND expence_categories.cat_id=expences.category_id");
 			if ($sql_2)
 			{
 				$row = $sql_2->fetch_assoc();		
-				$suma_kategori = $row['total'];
-				$sumaKategoriProcenty=round(($suma_kategori*100)/$_SESSION['suma_wydatkow'],2);
-				$new_array=array("label"=>$v, "y"=>$sumaKategoriProcenty);
-				array_push($dataPoints, $new_array);
+				$sumaWydatkowDanejKategorii = $row['total'];
+				$wydatkiWProcentach=round(($sumaWydatkowDanejKategorii*100)/$_SESSION['suma_wydatkow'],2);
+				$new_array=array("label"=>$etykietaWydatkow, "y"=>$wydatkiWProcentach);
+				array_push($daneWykresuWydatkow, $new_array);
 			}
 			else
 			{
@@ -174,11 +174,34 @@
 			}
 						
 		}
+
+		//-----------------------------------------
+		//Wylistowanie używanech kategorii przychodow
+		$sql = $polaczenie->query('SELECT income_categories.cat_name FROM income_categories, incomes WHERE incomes.user_id='.$_SESSION['id'].' AND incomes.category_id=income_categories.cat_id');
+		$KategoriePrzychodowNiezerowych = array(); 
+		While ($liniaDanych = $sql->fetch_assoc()) {
+			$KategoriePrzychodowNiezerowych[] = $liniaDanych['cat_name'];
+		}
+		$unikalneKategoriePrzychodowNiezerowych = array_unique($KategoriePrzychodowNiezerowych);
 		
-		$dataPoints2 = array(
-			array("label"=>"fff", "y"=>20),
-			array("label"=>"ggg", "y"=>30)
-		);
+		//Wypełnianie wykresu przychodow
+		$daneWykresuPrzychodow = array();
+		foreach ($unikalneKategoriePrzychodowNiezerowych as $k => $etykietaPrzychodow) {
+			$sql_2 = $polaczenie->query("SELECT SUM(incomes.ammount) as total FROM incomes, income_categories WHERE incomes.user_id=".$_SESSION['id']."  AND income_categories.cat_name='$etykietaPrzychodow' AND income_categories.cat_id=incomes.category_id");
+			if ($sql_2)
+			{
+				$row = $sql_2->fetch_assoc();		
+				$sumaPrzychodowDanejKategorii = $row['total'];
+				$przychodyWProcentach=round(($sumaPrzychodowDanejKategorii*100)/$_SESSION['suma_przychodow'],2);
+				$new_array=array("label"=>$etykietaPrzychodow, "y"=>$przychodyWProcentach);
+				array_push($daneWykresuPrzychodow, $new_array);
+			}
+			else
+			{
+				echo "Brak danych lub błąd połączenia z Bazą.";				
+			}
+						
+		}
 	}
 	
 ?>
@@ -233,7 +256,7 @@
 				type: "pie",
 				yValueFormatString: "#,##0.00\"%\"",
 				indexLabel: "{label} ({y})",
-				dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
+				dataPoints: <?php echo json_encode($daneWykresuWydatkow, JSON_NUMERIC_CHECK); ?>
 			}]
 		});
 		chart.render();
@@ -250,7 +273,7 @@
 				type: "pie",
 				yValueFormatString: "#,##0.00\"%\"",
 				indexLabel: "{label} ({y})",
-				dataPoints: <?php echo json_encode($dataPoints2, JSON_NUMERIC_CHECK); ?>
+				dataPoints: <?php echo json_encode($daneWykresuPrzychodow, JSON_NUMERIC_CHECK); ?>
 			}]
 		});
 		chart2.render();
@@ -396,8 +419,8 @@
 						<h1 class="text-center py-1">Suma Przychodów</h1>
 						<div class="row justify-content-center mt-4"><span data-feather="plus-square"></span> <p class="balance font-weight-bold">
 								<?php 
-									echo $_SESSION['suma_wplywow'].'zł';
-									unset($_SESSION['suma_wplywow']);
+									echo $_SESSION['suma_przychodow'].'zł';
+									unset($_SESSION['suma_przychodoww']);
 								?>
 						</p></div>	
 					</div>
