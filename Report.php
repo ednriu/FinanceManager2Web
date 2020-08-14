@@ -149,31 +149,38 @@
 
 		//-----------------------------------------
 		//Wylistowanie używanech kategorii wydatków
-		$sql = $polaczenie->query('SELECT expence_categories.cat_name FROM expence_categories, expences WHERE expences.user_id='.$_SESSION['id'].' AND expences.category_id=expence_categories.cat_id');
-		$KategorieWydatkowNiezerowych = array(); 
-		While ($liniaDanych = $sql->fetch_assoc()) {
-			$KategorieWydatkowNiezerowych[] = $liniaDanych['cat_name'];
+		if ($_SESSION['suma_wydatkow']!=0) {
+			$sql = $polaczenie->query('SELECT expence_categories.cat_name FROM expence_categories, expences WHERE expences.user_id='.$_SESSION['id'].' AND expences.category_id=expence_categories.cat_id');
+			$KategorieWydatkowNiezerowych = array(); 
+			While ($liniaDanych = $sql->fetch_assoc()) {
+				$KategorieWydatkowNiezerowych[] = $liniaDanych['cat_name'];
+			}
+			$unikalneKategorieWydatkowNiezerowych = array_unique($KategorieWydatkowNiezerowych);
+			
+			//Wypełnianie wykresu wydatków
+			$daneWykresuWydatkow = array();
+			foreach ($unikalneKategorieWydatkowNiezerowych as $k => $etykietaWydatkow) {
+				$sql_2 = $polaczenie->query("SELECT SUM(expences.ammount) as total FROM expences, expence_categories WHERE expences.user_id=".$_SESSION['id']."  AND expence_categories.cat_name='$etykietaWydatkow' AND expence_categories.cat_id=expences.category_id");
+				if ($sql_2)
+				{
+					$row = $sql_2->fetch_assoc();		
+					$sumaWydatkowDanejKategorii = $row['total'];
+					$wydatkiWProcentach=round(($sumaWydatkowDanejKategorii*100)/$_SESSION['suma_wydatkow'],2);
+					$new_array=array("label"=>$etykietaWydatkow, "y"=>$wydatkiWProcentach);
+					array_push($daneWykresuWydatkow, $new_array);
+				}
+				else
+				{
+					echo "Brak danych lub błąd połączenia z Bazą.";				
+				}
+							
+			}
 		}
-		$unikalneKategorieWydatkowNiezerowych = array_unique($KategorieWydatkowNiezerowych);
+		else
+		{
+			$daneWykresuWydatkow = array(array("brak danych", 100));
+		}
 		
-		//Wypełnianie wykresu wydatków
-		$daneWykresuWydatkow = array();
-		foreach ($unikalneKategorieWydatkowNiezerowych as $k => $etykietaWydatkow) {
-			$sql_2 = $polaczenie->query("SELECT SUM(expences.ammount) as total FROM expences, expence_categories WHERE expences.user_id=".$_SESSION['id']."  AND expence_categories.cat_name='$etykietaWydatkow' AND expence_categories.cat_id=expences.category_id");
-			if ($sql_2)
-			{
-				$row = $sql_2->fetch_assoc();		
-				$sumaWydatkowDanejKategorii = $row['total'];
-				$wydatkiWProcentach=round(($sumaWydatkowDanejKategorii*100)/$_SESSION['suma_wydatkow'],2);
-				$new_array=array("label"=>$etykietaWydatkow, "y"=>$wydatkiWProcentach);
-				array_push($daneWykresuWydatkow, $new_array);
-			}
-			else
-			{
-				echo "Brak danych lub błąd połączenia z Bazą.";				
-			}
-						
-		}
 
 		//-----------------------------------------
 		//Wylistowanie używanech kategorii przychodow
