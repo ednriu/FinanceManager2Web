@@ -179,6 +179,10 @@
 	<link rel="stylesheet" type="text/css" href="index_global.css">
 	<!-- Recaptcha -->
 	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+	<!-- Globalny JS -->
+	<script type="text/javascript" src="scr_wydatki_przychody.js"></script>
+
+
 
   </head>
 <body>
@@ -222,7 +226,7 @@
 									<small id="emailHelp" class="form-text text-muted">Rekomendujemy wpisywać hasło zasłonięte gwiazdkami.</small>
 								  </div>
 								  <div class="form-group login-form form-check">
-									<input type="checkbox" class="form-check-input" id="showPassword">
+									<input type="checkbox" class="form-check-input" onclick="showHidePassword()" id="showPassword">
 									<label class="form-check-label" for="showPassword">Pokaż Hasło</label>
 								  </div>
 								 </div>		 
