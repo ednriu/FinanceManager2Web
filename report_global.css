@@ -31,33 +31,39 @@ body {
 	text-align:center;
 	padding:1rem;
 	border-radius: 10px;
-}
-
-.table-scrolling{
 	height:400px;
-	overflow-y:hidden;
-	overflow-x: auto;
-	position:relative;
-	display:block;
 }
 
 table.table-bordered{
     border:1px solid grey!important;
     margin-top:20px;
   }
-table.table-bordered > thead > tr > th{
-    border:1px solid grey!important;
-}
-table.table-bordered > tbody > tr > td{
+table.table-bordered > thead > tr > th, td{
     border:1px solid grey!important;
 }
 
 .table-responsive.inc-exp-area h1{
 	color:#2C1B6F;
 }
-table.table th:last-child {
-        width: 80px;
-    }
+
+table.table-bordered > thead{
+	display:block;
+}
+
+table.table-bordered > tbody{
+	display:block;
+	overflow-y:scroll;
+	max-height:240px;
+}
+
+table.table-bordered > tbody > tr > td:last-child {
+	width:83px;
+}
+
+table.table-bordered > tbody > tr > td, th {
+	width:100px;
+}
+
 table.table td a {
 	cursor: pointer;
 	display: inline-block;

@@ -149,38 +149,31 @@
 
 		//-----------------------------------------
 		//Wylistowanie używanech kategorii wydatków
-		if ($_SESSION['suma_wydatkow']!=0) {
-			$sql = $polaczenie->query('SELECT expence_categories.cat_name FROM expence_categories, expences WHERE expences.user_id='.$_SESSION['id'].' AND expences.category_id=expence_categories.cat_id');
-			$KategorieWydatkowNiezerowych = array(); 
-			While ($liniaDanych = $sql->fetch_assoc()) {
-				$KategorieWydatkowNiezerowych[] = $liniaDanych['cat_name'];
-			}
-			$unikalneKategorieWydatkowNiezerowych = array_unique($KategorieWydatkowNiezerowych);
-			
-			//Wypełnianie wykresu wydatków
-			$daneWykresuWydatkow = array();
-			foreach ($unikalneKategorieWydatkowNiezerowych as $k => $etykietaWydatkow) {
-				$sql_2 = $polaczenie->query("SELECT SUM(expences.ammount) as total FROM expences, expence_categories WHERE expences.user_id=".$_SESSION['id']."  AND expence_categories.cat_name='$etykietaWydatkow' AND expence_categories.cat_id=expences.category_id");
-				if ($sql_2)
-				{
-					$row = $sql_2->fetch_assoc();		
-					$sumaWydatkowDanejKategorii = $row['total'];
-					$wydatkiWProcentach=round(($sumaWydatkowDanejKategorii*100)/$_SESSION['suma_wydatkow'],2);
-					$new_array=array("label"=>$etykietaWydatkow, "y"=>$wydatkiWProcentach);
-					array_push($daneWykresuWydatkow, $new_array);
-				}
-				else
-				{
-					echo "Brak danych lub błąd połączenia z Bazą.";				
-				}
-							
-			}
+		$sql = $polaczenie->query('SELECT expence_categories.cat_name FROM expence_categories, expences WHERE expences.user_id='.$_SESSION['id'].' AND expences.category_id=expence_categories.cat_id');
+		$KategorieWydatkowNiezerowych = array(); 
+		While ($liniaDanych = $sql->fetch_assoc()) {
+			$KategorieWydatkowNiezerowych[] = $liniaDanych['cat_name'];
 		}
-		else
-		{
-			$daneWykresuWydatkow = array(array("brak danych", 100));
-		}
+		$unikalneKategorieWydatkowNiezerowych = array_unique($KategorieWydatkowNiezerowych);
 		
+		//Wypełnianie wykresu wydatków
+		$daneWykresuWydatkow = array();
+		foreach ($unikalneKategorieWydatkowNiezerowych as $k => $etykietaWydatkow) {
+			$sql_2 = $polaczenie->query("SELECT SUM(expences.ammount) as total FROM expences, expence_categories WHERE expences.user_id=".$_SESSION['id']."  AND expence_categories.cat_name='$etykietaWydatkow' AND expence_categories.cat_id=expences.category_id");
+			if ($sql_2)
+			{
+				$row = $sql_2->fetch_assoc();		
+				$sumaWydatkowDanejKategorii = $row['total'];
+				$wydatkiWProcentach=round(($sumaWydatkowDanejKategorii*100)/$_SESSION['suma_wydatkow'],2);
+				$new_array=array("label"=>$etykietaWydatkow, "y"=>$wydatkiWProcentach);
+				array_push($daneWykresuWydatkow, $new_array);
+			}
+			else
+			{
+				echo "Brak danych lub błąd połączenia z Bazą.";				
+			}
+						
+		}
 
 		//-----------------------------------------
 		//Wylistowanie używanech kategorii przychodow
@@ -438,7 +431,6 @@
 			<div class="col-lg-6">
 				  <div class="table-responsive inc-exp-area mt-3">
 				  	<h1 class="d-flex justify-content-center pb-2">Wydatki</h1>
-					<div class="table-scrolling">
 						<table id="table-expences" class="table table-striped table-sm table-bordered text-secondary table-light" >
 						  <thead class="thead-dark">
 							<tr>
@@ -451,40 +443,16 @@
 							</tr>
 						  </thead>
 						  <tbody>
-							<?php
-								if ($polaczenie->connect_errno!=0)
-								{
-									echo "Error: ".$polaczenie->connect_errno;
-								}
-								else
-								{	
-									$wydatki = $polaczenie->query("SELECT expences.expence_id, expences.date, expences.ammount,expences.category_id,users.user_id,expences.comment, expence_categories.cat_name 
-									FROM 
-										`expences`,
-										`expence_categories`,
-										`users`
-									WHERE users.user_id = ".$_SESSION['id']."
-										AND expences.user_id = users.user_id
-										AND expences.category_id = expence_categories.cat_id");
-										$liczba_porzadkowa = 1;
-										while ($wiersz_wydatkow = $wydatki->fetch_assoc())
-										{
-											echo '<tr>';
-											  echo '<td>'.$liczba_porzadkowa.'</td>';
-											  echo '<td>'.$wiersz_wydatkow['date'].'</td>';
-											  echo '<td>'.$wiersz_wydatkow['ammount'].'</td>';
-											  echo '<td>'.$wiersz_wydatkow['cat_name'].'</td>';
-											  echo '<td>'.$wiersz_wydatkow['comment'].'</td>';
-											  echo '<td><a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-													<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>';
-											echo '</tr>';
-											$liczba_porzadkowa=$liczba_porzadkowa+1;
-										}
-								};
-							?>							
+							<tr><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td></tr>
+							<tr><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td></tr>
+							<tr><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td></tr>
+							<tr><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td></tr>
+							<tr><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td></tr>
+							<tr><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td></tr>
+							<tr><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td></tr>
+							<tr><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td></tr>													
 						  </tbody>
 						</table>
-					</div>
 				  </div>
 				<div class="wykres">
 					<div id="chartContainer_wydatki" style="height: 370px; width: 100%;"></div>
@@ -496,7 +464,6 @@
 			<div class="col-lg-6">
 				  <div class="table-responsive inc-exp-area mt-3">
 				  	<h1 class="d-flex justify-content-center pb-2">Przychody</h1>
-					<div class="table-scrolling">
 						<table id="table-incomes" class="table table-striped table-sm table-bordered text-secondary table-light">
 						  <thead class="thead-dark">
 							<tr>
@@ -543,7 +510,6 @@
 							?>						
 						  </tbody>
 						</table>
-					</div>
 				  </div>
 				  
 					<div class="wykres">
