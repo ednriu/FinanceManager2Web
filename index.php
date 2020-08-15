@@ -179,11 +179,40 @@
 	<link rel="stylesheet" type="text/css" href="index_global.css">
 	<!-- Recaptcha -->
 	<script src="https://www.google.com/recaptcha/api.js" async defer></script>
-	<!-- Globalny JS -->
-	<script type="text/javascript" src="scr_wydatki_przychody.js"></script>
+	<script>
+		var hideInProgress = false;
+		var showModalId = '';
 
+		function showModal(elementId) {
+			if (hideInProgress) {
+				showModalId = elementId;
+			} else {
+				$("#" + elementId).modal("show");
+			}
+		};
 
+		function hideModal(elementId) {
+			hideInProgress = true;
+			$("#" + elementId).on('hidden.bs.modal', hideCompleted);
+			$("#" + elementId).modal("hide");
 
+			function hideCompleted() {
+				hideInProgress = false;
+				if (showModalId) {
+					showModal(showModalId);
+				}
+				showModalId = '';
+				$("#" + elementId).off('hidden.bs.modal');
+			}
+		};
+	</script>
+	
+	<?php
+					if (($_SESSION['blad'] == true) && isset($_SESSION['blad'])){
+						echo "<script>alertModal();</script>";
+					}
+	?>
+	
   </head>
 <body>
 <div class="container-fluid bg">
@@ -197,10 +226,7 @@
 
 			
 				<!--Modal Logowanie-->
-				<div class="modal fade <?php
-					if (($_SESSION['blad'] == true) && isset($_SESSION['blad']))
-						echo 'show d-block';
-				?>" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				  <div class="modal-dialog  form-logowanie">
 					<div class="modal-content">					
 						<div class="modal-header">
@@ -226,7 +252,7 @@
 									<small id="emailHelp" class="form-text text-muted">Rekomendujemy wpisywać hasło zasłonięte gwiazdkami.</small>
 								  </div>
 								  <div class="form-group login-form form-check">
-									<input type="checkbox" class="form-check-input" onclick="showHidePassword()" id="showPassword">
+									<input type="checkbox" class="form-check-input" id="showPassword">
 									<label class="form-check-label" for="showPassword">Pokaż Hasło</label>
 								  </div>
 								 </div>		 
@@ -389,8 +415,8 @@
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
 </html>
