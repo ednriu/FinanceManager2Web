@@ -66,8 +66,3 @@ function showHidePassword() {
     x.type = "password";
   }
 }
-
-
-
-
-
