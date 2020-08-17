@@ -313,6 +313,7 @@
         <a class="nav-link" href="logout.php"><span class="navbar-text">Wyloguj</span><span class="sr-only"></span></a>
       </li>
     </ul>
+	<?php echo '<span class="badge badge-success mx-2">Jesteś zalogowany jako: '.$_SESSION['name'].'</span>'; ?>
     <form class="form-inline my-2 my-lg-0">
       <input class="form-control mr-sm-2 search-input" type="text" placeholder="Search" aria-label="Search">
       <button class="btn btn-secondary my-2 my-sm-0 search-btn" type="submit">Search</button>
@@ -330,7 +331,7 @@
 		<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
 		  <div class="sidebar-sticky pt-lg-3 pt-md-5">		  
 			<ul class="nav flex-column pt-2">	
-			<?php echo 'witaj:'.$_SESSION['name']; ?>
+			
 			  <li class="nav-item">
 				<a class="nav-link" href="#" data-toggle="modal" data-target="#modalExpense">
 				  <span data-feather="credit-card"></span>
@@ -443,14 +444,37 @@
 							</tr>
 						  </thead>
 						  <tbody>
-							<tr><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td></tr>
-							<tr><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td></tr>
-							<tr><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td></tr>
-							<tr><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td></tr>
-							<tr><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td></tr>
-							<tr><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td></tr>
-							<tr><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td></tr>
-							<tr><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td><td>asdf</td></tr>													
+							<?php
+								if ($polaczenie->connect_errno!=0)
+								{
+									echo "Error: ".$polaczenie->connect_errno;
+								}
+								else
+								{	
+									$wydatki = $polaczenie->query("SELECT expences.expence_id, expences.date, expences.ammount,expences.category_id,users.user_id,expences.comment, expence_categories.cat_name 
+									FROM 
+										`expences`,
+										`expence_categories`,
+										`users`
+									WHERE users.user_id = ".$_SESSION['id']."
+										AND expences.user_id = users.user_id
+										AND expences.category_id = expence_categories.cat_id");
+										$liczba_porzadkowa = 1;
+										while ($wiersz_wydatkow = $wydatki->fetch_assoc())
+										{
+											echo '<tr>';
+											  echo '<td>'.$liczba_porzadkowa.'</td>';
+											  echo '<td>'.$wiersz_wydatkow['date'].'</td>';
+											  echo '<td>'.$wiersz_wydatkow['ammount'].'</td>';
+											  echo '<td>'.$wiersz_wydatkow['cat_name'].'</td>';
+											  echo '<td>'.$wiersz_wydatkow['comment'].'</td>';
+											  echo '<td><a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+													<a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a></td>';
+											echo '</tr>';
+											$liczba_porzadkowa=$liczba_porzadkowa+1;
+										}
+								};
+							?>												
 						  </tbody>
 						</table>
 				  </div>
@@ -691,8 +715,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
     <script src="bootstrap-4.0.0-dist/js/dashboard.js"></script>
-	<script src="bootstrap-4.0.0-dist/js/pieChart_wydatki.js"></script>
-	<script src="bootstrap-4.0.0-dist/js/pieChart_wplywy.js"></script>
+
 
 <?php $polaczenie->close(); ?>
 </body>
