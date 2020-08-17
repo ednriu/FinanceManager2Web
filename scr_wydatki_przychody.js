@@ -57,8 +57,12 @@ function handleClick2(myRadio) {
 		document.getElementById("datep2").disabled = true;
 		}
 };
-
-
-
-
-
+//showing and hidding password
+function showHidePassword() {
+  var x = document.getElementById("haslo");
+  if (x.type === "password") {
+    x.type = "text";
+  } else {
+    x.type = "password";
+  }
+}
